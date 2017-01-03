@@ -2,16 +2,12 @@ package obligatory_2;
 
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JPanel;
-import javax.swing.JButton;
+import javax.swing.*;
 
 public class Multithread_GUI {
 
 	private JFrame frmCustomComponent;
-	private JTextPane textPane;
+	private JTextArea textArea;
 
 	/**
 	 * Launch the application.
@@ -46,10 +42,12 @@ public class Multithread_GUI {
 		frmCustomComponent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCustomComponent.getContentPane().setLayout(null);
 		
-		textPane = new JTextPane();
-		textPane.setBounds(0, 300, 800, 300);
-		frmCustomComponent.getContentPane().add(textPane);
-		//textPane.setColumns(10);
+		textArea = new JTextArea();
+		textArea.setBounds(0, 300, 800, 300);
+		frmCustomComponent.getContentPane().add(textArea);
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 800, 300);
