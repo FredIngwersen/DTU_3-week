@@ -1,13 +1,18 @@
 package obligatory_2;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
 
 import javax.swing.*;
 
-public class Multithread_GUI {
+public class Multithread_GUI extends JFrame implements ActionListener{
 
-	private JFrame frmCustomComponent;
-	private JTextArea textArea;
+	public JFrame frame;
+	public JTextArea textArea;
+	public JButton b1;
+	private CustomComponent customComponent = new CustomComponent();
 
 	/**
 	 * Launch the application.
@@ -17,7 +22,7 @@ public class Multithread_GUI {
 			public void run() {
 				try {
 					Multithread_GUI window = new Multithread_GUI();
-					window.frmCustomComponent.setVisible(true);
+					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -36,25 +41,45 @@ public class Multithread_GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmCustomComponent = new JFrame();
-		frmCustomComponent.setTitle("Custom Component");
-		frmCustomComponent.setBounds(100, 100, 800, 800);
-		frmCustomComponent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmCustomComponent.getContentPane().setLayout(null);
-		
+		frame = new JFrame();
+		frame.setTitle("Custom Component");
+		frame.setBounds(100, 100, 800, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
 		textArea = new JTextArea();
 		textArea.setBounds(0, 300, 800, 300);
-		frmCustomComponent.getContentPane().add(textArea);
+		frame.getContentPane().add(textArea);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
-		
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 800, 300);
-		frmCustomComponent.getContentPane().add(panel);
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(300, 650, 200, 50);
-		frmCustomComponent.getContentPane().add(btnNewButton);
+
+
+		//Custom component
+		customComponent = new CustomComponent();
+		customComponent.setBounds(0, 0, 800, 300);
+		frame.getContentPane().add(customComponent);
+
+		b1 = new JButton("Refresh");
+		b1.setBounds(300, 650, 200, 50);
+		b1.addActionListener(this);
+		frame.getContentPane().add(b1);
+
+	}
+
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "SwingAction");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == b1) {
+			// Refresh all
+			textArea.setText("");
+			customComponent.removeAll(); customComponent.updateUI();
+		} 
 	}
 }
