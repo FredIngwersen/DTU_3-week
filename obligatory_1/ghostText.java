@@ -1,4 +1,4 @@
-package numberConverter;
+package obligatory_1;
 
 import java.awt.Color;
 import java.awt.Graphics;
