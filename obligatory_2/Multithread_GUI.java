@@ -4,12 +4,14 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JPanel;
+import javax.swing.JButton;
 
-public class CustomComponent {
+public class Multithread_GUI {
 
 	private JFrame frmCustomComponent;
-	private JTextField textField;
+	private JTextPane textPane;
 
 	/**
 	 * Launch the application.
@@ -18,7 +20,7 @@ public class CustomComponent {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CustomComponent window = new CustomComponent();
+					Multithread_GUI window = new Multithread_GUI();
 					window.frmCustomComponent.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,7 +32,7 @@ public class CustomComponent {
 	/**
 	 * Create the application.
 	 */
-	public CustomComponent() {
+	public Multithread_GUI() {
 		initialize();
 	}
 
@@ -38,19 +40,23 @@ public class CustomComponent {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmCustomComponent = new CustomComponent();
+		frmCustomComponent = new JFrame();
 		frmCustomComponent.setTitle("Custom Component");
-		frmCustomComponent.setBounds(100, 100, 800, 400);
+		frmCustomComponent.setBounds(100, 100, 800, 800);
 		frmCustomComponent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCustomComponent.getContentPane().setLayout(null);
 		
-		textField = new JTextField();
-		textField.setBounds(0, 200, 800, 200);
-		frmCustomComponent.getContentPane().add(textField);
-		textField.setColumns(10);
+		textPane = new JTextPane();
+		textPane.setBounds(0, 300, 800, 300);
+		frmCustomComponent.getContentPane().add(textPane);
+		//textPane.setColumns(10);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 800, 200);
+		panel.setBounds(0, 0, 800, 300);
 		frmCustomComponent.getContentPane().add(panel);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(300, 650, 200, 50);
+		frmCustomComponent.getContentPane().add(btnNewButton);
 	}
 }
