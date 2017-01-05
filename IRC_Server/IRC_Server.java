@@ -27,15 +27,11 @@ public class IRC_Server implements Runnable{
 			} catch (IOException e) {
 				if(isStopped()) {
 					System.out.println("Server Stopped.") ;
-					return;
+					return;	
 				}
-				throw new RuntimeException(
-						"Error accepting client connection", e);
+				throw new RuntimeException("Error accepting client connection", e);
 			}
-			new Thread(
-					new WorkerRunnable(
-							clientSocket, "Multithreaded Server")
-					).start();
+			new Thread(new WorkerRunnable(clientSocket, "Active client")).start();
 		}
 		System.out.println("Server Stopped.") ;
 	}
