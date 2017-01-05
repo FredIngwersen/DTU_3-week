@@ -56,6 +56,12 @@ public class gameClass {
 			return false;
 		}
 	}
-
-	
+	public void trustRoll(int totalp2){
+		totalp1 = rollDice();
+		if(beatRoll(totalp1, totalp2)){
+			//TODO CODE THAT HANDLES PLAYER WINNING.
+		} else {
+			//TODO CODE THAT HANDLES PLAYER LOSING.
+		}
+	}
 }
