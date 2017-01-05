@@ -41,4 +41,8 @@ public class messages {
 			MessageList.addFirst(msg);
 		}
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> ac0feac25ecfd3a9261da4a1b9312de58e4d6ba3
