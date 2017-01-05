@@ -1,12 +1,14 @@
 # DTU_3-week
 
-<b>OVERVIEW: Java IRC Server Project</b>
+<b>OVERVIEW: Java Mayer Project</b>
+
+Mayer is usually considered a drinking game and is played with two die. The game can be played with 
 
 <b>Java Server:</b>
 
 To start with, there needs to be a server to handle all the traffic. This has to be written in Java per requirement of the course.
 
-The server will be a multithreaded server, using the IRC and possibly HTTP protocols.
+The server will be a multithreaded server to handle the clients .
 
 <b>Client side:</b>
 
