@@ -12,6 +12,4 @@ The server will be a multithreaded server to handle the clients .
 
 <b>Client side:</b>
 
-The client side will be written in HTML & JavaScript. It will feature a sort of login screen; one will be required to make up a "Nickname", no passwords as of writing this.
-
-The client will also feature a place to write in text messages to the other users online, this will all end up in a livefeed.
+The client side will be a Java applet, which contains the GUI for the game as well as a chatroom for chatting with other active players.
