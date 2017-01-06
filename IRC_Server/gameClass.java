@@ -7,13 +7,13 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class gameClass {
 	int totalp1;
-	int totalp2;
-
+	private int dice1;
+	private int dice2;
 	public int rollDice() //Rolls 2 dice and returns an int of the 2 dice (roll 3 and 6, returns 63)
 	{
 		String total;
-		int dice1 = ThreadLocalRandom.current().nextInt(1, 7);
-		int dice2 = ThreadLocalRandom.current().nextInt(1, 7);
+		dice1 = ThreadLocalRandom.current().nextInt(1, 7);
+		dice2 = ThreadLocalRandom.current().nextInt(1, 7);
 		if (dice1 > dice2) {
 			total = Integer.toString(dice1) + Integer.toString(dice2);
 		} else if (dice2 > dice1) {
@@ -21,7 +21,8 @@ public class gameClass {
 		} else {
 			total = Integer.toString(dice1) + Integer.toString(dice2);
 		}
-		return Integer.parseInt(total);
+		totalp1 = Integer.parseInt(total);
+		return totalp1;
 	}
 
 	public boolean beatRoll(int totalp1, int totalp2) { //Returns a true if p1 beat p2's roll, else returns false
@@ -56,12 +57,24 @@ public class gameClass {
 			return false;
 		}
 	}
-	public void trustRoll(int totalp2){
+	public void notTrust(int totalp2){
 		totalp1 = rollDice();
 		if(beatRoll(totalp1, totalp2)){
 			//TODO CODE THAT HANDLES PLAYER WINNING.
 		} else {
 			//TODO CODE THAT HANDLES PLAYER LOSING.
 		}
+	}
+
+	public int getDice1() {
+		return dice1-1;
+	}
+
+	public int getDice2() {
+		return dice2-1;
+	}
+
+	public int getTotalp1() {
+		return totalp1;
 	}
 }
