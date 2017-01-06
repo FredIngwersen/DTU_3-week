@@ -45,9 +45,10 @@ public class IRC_Server implements Runnable{
 				gameFull=true;
 			}
 		}
+		x = 0;
 		while (!isStopped)
 		{
-			x = 0;
+
 			try {
 				String clientRequest = BIS[x].readLine();
 				if (clientRequest.equals("Request Roll"))
@@ -55,18 +56,33 @@ public class IRC_Server implements Runnable{
 					outputStreams[x].write(gameClasses[x].rollDice());
 					outputStreams[x].flush();
 				}
-				for (int i = 0; i < maxPlayers; i ++)
+				x = x +1;
+				for (int i = x; i < maxPlayers; i ++)
 				{
-
+					String trustRoll = BIS[i].readLine();
+					if (trustRoll.equals("true"))
+					{
+						outputStreams[i].write(gameClasses[i].rollDice());
+						outputStreams[i].flush();
+						x = x+1;
+					}
+					else if (trustRoll.equals("false")) {
+						if (i == 0) {
+							i = maxPlayers;
+						}
+						for (int y = 0; y < maxPlayers; y++){
+							outputStreams[y].write(gameClasses[i-1].getTotalp1());
+						}
+						x = x+1;
+						break;
+					}
+					if (i == maxPlayers-1){
+						i = 0;
+					}
 				}
 			} catch (IOException e)
 			{
 				System.out.println("Some sort of error");
-			}
-
-			for (int i = 0; i < maxPlayers; i ++)
-			{
-
 			}
 		}
 		System.out.println("Server Stopped.") ;
