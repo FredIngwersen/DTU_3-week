@@ -53,10 +53,7 @@ public class GameGui extends JFrame implements ActionListener {
 						dice2 = Integer.parseInt(bir.readLine());
 						//TODO Show dice
 					}
-					else
-					{
 
-					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
