@@ -19,6 +19,9 @@ public class IRC_Server implements Runnable{
 	BufferedReader[] BIS;
 	OutputStream[] outputStreams;
 
+	public IRC_Server(int port){
+		this.serverPort = port;
+	}
 
 	public void run(){
 		synchronized(this){
@@ -50,6 +53,8 @@ public class IRC_Server implements Runnable{
 		{
 
 			try {
+				outputStreams[x].write("Start".getBytes());
+				outputStreams[x].flush();
 				String clientRequest = BIS[x].readLine();
 				if (clientRequest.equals("Request Roll"))
 				{
@@ -59,10 +64,24 @@ public class IRC_Server implements Runnable{
 				x = x +1;
 				for (int i = x; i < maxPlayers; i ++)
 				{
+					for (int c = 0; c < maxPlayers; c++)
+					{
+						if (c == i)
+						{
+							outputStreams[c].write("yourTurn".getBytes());
+						}
+						else{
+							outputStreams[c].write("wait".getBytes());
+						}
+					}
+
 					String trustRoll = BIS[i].readLine();
 					if (trustRoll.equals("true"))
 					{
-						outputStreams[i].write(gameClasses[i].rollDice());
+						gameClasses[i].rollDice();
+						outputStreams[i].write(gameClasses[x].getDice1());
+						outputStreams[i].flush();
+						outputStreams[i].write(gameClasses[x].getDice2());
 						outputStreams[i].flush();
 						x = x+1;
 					}
