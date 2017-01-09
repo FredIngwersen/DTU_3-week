@@ -15,6 +15,7 @@ public class PlayerInstance implements Runnable{
 	protected Socket clientSocket  = null;
 	protected String serverText    = null;
 	protected boolean clientActive = true;
+	protected gameClass gameClass = new gameClass();
 	
 	public PlayerInstance(Socket clientSocket, String serverText) {
 		this.clientSocket = clientSocket;
@@ -26,8 +27,12 @@ public class PlayerInstance implements Runnable{
 			InputStream input  = clientSocket.getInputStream();
 			BufferedReader BIS = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			OutputStream output = clientSocket.getOutputStream();
+
+			BufferedOutputStream bos = new BufferedOutputStream(
+					clientSocket.getOutputStream());
+			
 			long time = System.currentTimeMillis();
-			output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
+			output.write(("Player has joined the game at " +
 					this.serverText + " - " +
 					time +
 					"").getBytes());
@@ -35,13 +40,19 @@ public class PlayerInstance implements Runnable{
 			System.out.println("Request processed: " + time);
 			while(clientActive){
 				
-				BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
 
-				String request = bir.readLine();
+				String request = BIS.readLine();
+				
+				output.write("Start".getBytes());
+				output.flush();
+				String clientRequest = BIS.readLine();
+				if (clientRequest.equals("Request Roll"))
+				{
+					output.write(gameClass.rollDice());
+					output.flush();
+				}
 			}
 			
-
 			output.close();
 			input.close();
 		} catch (IOException e) {

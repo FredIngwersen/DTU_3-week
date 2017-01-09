@@ -7,7 +7,7 @@ import java.net.Socket;
 public class ServerDouble{
 	public static void main(String[] args) throws IOException{
 		int serverPort = 9000;
-		int maxPlayers = 4;
+		final int maxPlayers = 4;
 		int x = 0;
 		ServerSocket serverSockets = new ServerSocket(serverPort);
 		Socket[] clientSockets = new Socket[maxPlayers];
@@ -33,7 +33,7 @@ public class ServerDouble{
 				throw new RuntimeException(
 						"Error accepting client connection", e);
 			}
-			x = x+1;
+			x = x + 1;
 			if (x == maxPlayers)
 			{
 				gameFull=true;
@@ -44,6 +44,8 @@ public class ServerDouble{
 		{
 
 			try {
+				new Thread(new PlayerInstance(clientSockets[x], 
+						"Player number "+ x +" has joined the game")).start();
 				outputStreams[x].write("Start".getBytes());
 				outputStreams[x].flush();
 				String clientRequest = BIS[x].readLine();
