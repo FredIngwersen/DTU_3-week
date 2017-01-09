@@ -1,4 +1,4 @@
-package IRC_Server;
+package MayerGame;
 
 //import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 

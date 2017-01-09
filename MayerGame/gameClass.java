@@ -1,4 +1,4 @@
-package IRC_Server;
+package MayerGame;
 
 import java.util.concurrent.ThreadLocalRandom;
 

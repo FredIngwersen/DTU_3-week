@@ -1,15 +1,15 @@
-package IRC_Server;
+package MayerGame;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class IRC_Server{
-	public static void main(String[] args){
-		int serverPort = 1;
+public class ServerDouble{
+	public static void main(String[] args) throws IOException{
+		int serverPort = 9000;
 		int maxPlayers = 4;
 		int x = 0;
-		ServerSocket[] serverSockets = new ServerSocket[maxPlayers];
+		ServerSocket serverSockets = new ServerSocket(serverPort);
 		Socket[] clientSockets = new Socket[maxPlayers];
 		boolean isStopped = false;
 		boolean gameFull = false;
@@ -18,10 +18,10 @@ public class IRC_Server{
 		BufferedReader[] BIS = new BufferedReader[maxPlayers];
 		OutputStream[] outputStreams = new OutputStream[maxPlayers];
 
-		openServerSockets(maxPlayers, serverSockets, gameClasses, serverPort);
+		openServerSockets(maxPlayers, clientSockets, gameClasses, serverPort);
 		while(!gameFull){
 			try {
-				clientSockets[x] = serverSockets[x].accept();
+				clientSockets[x] = serverSockets.accept();
 				inputStreams[x] = clientSockets[x].getInputStream();
 				BIS[x] = new BufferedReader(new InputStreamReader(clientSockets[x].getInputStream()));
 				outputStreams[x] = clientSockets[x].getOutputStream();
@@ -99,27 +99,23 @@ public class IRC_Server{
 		System.out.println("Server Stopped.") ;
 	}
 
-	public static void stop(Boolean isStopped, int maxPlayers, ServerSocket[] serverSockets){
+	public static void stop(Boolean isStopped, int maxPlayers, ServerSocket serverSockets){
 		isStopped = true;
 		try {
 			for (int i = 0; i < maxPlayers; i++)
 			{
-				serverSockets[i].close();
+				serverSockets.close();
 			}
 
 		} catch (IOException e) {
 			throw new RuntimeException("Error closing server", e);
 		}
 	}
-	public static void openServerSockets(int maxPlayers, ServerSocket[] serverSockets, gameClass[] gameClasses, int serverPort) {
-		try {
-			for (int i = 0; i < maxPlayers; i++)
-			{
-				serverSockets[i] = new ServerSocket(serverPort);
-				gameClasses[i] = new gameClass();
-			}
-		} catch (IOException e) {
-			throw new RuntimeException("Cannot open port" + serverPort , e);
+	public static void openServerSockets(int maxPlayers, Socket[] clientSockets, gameClass[] gameClasses, int serverPort) throws IOException {
+		for (int i = 0; i < maxPlayers; i++)
+		{
+			clientSockets[i] = new Socket();
+			gameClasses[i] = new gameClass();
 		}
 	}
 }

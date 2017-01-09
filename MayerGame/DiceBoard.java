@@ -1,4 +1,4 @@
-package IRC_Server;
+package MayerGame;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -30,12 +30,12 @@ public class DiceBoard extends JPanel {
 		Random rand = new Random();
 		try {
 			images = new Image[6];
-			images[0] = ImageIO.read(new File("IRC_Server/dice1.png"));
-			images[1] = ImageIO.read(new File("IRC_Server/dice2.png"));
-			images[2] = ImageIO.read(new File("IRC_Server/dice3.png"));
-			images[3] = ImageIO.read(new File("IRC_Server/dice4.png"));
-			images[4] = ImageIO.read(new File("IRC_Server/dice5.png"));
-			images[5] = ImageIO.read(new File("IRC_Server/dice6.png"));
+			images[0] = ImageIO.read(new File("MayerGame/img/dice1.png"));
+			images[1] = ImageIO.read(new File("MayerGame/img/dice2.png"));
+			images[2] = ImageIO.read(new File("MayerGame/img/dice3.png"));
+			images[3] = ImageIO.read(new File("MayerGame/img/dice4.png"));
+			images[4] = ImageIO.read(new File("MayerGame/img/dice5.png"));
+			images[5] = ImageIO.read(new File("MayerGame/img/dice6.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

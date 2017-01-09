@@ -1,4 +1,4 @@
-package IRC_Server;
+package MayerGame;
 import java.util.LinkedList;
 /**
  * Created by William Ben Embarek on 04/01/2017.
