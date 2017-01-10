@@ -25,40 +25,38 @@ public class ServerThread extends Thread {
 	}
 
 	public void run() {
-		System.out.println("We made it");
 		try {
-			System.out.println("Tried");
-			InputStream input = clientSocket.getInputStream();
-			OutputStream output = clientSocket.getOutputStream();
-			BufferedReader bir = new BufferedReader(new InputStreamReader(input));
+			BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true);
+			BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
 			System.out.println("Init variables");
 			while (1 == 1) {
 				try {
 					Thread.sleep(1000);
 				}
 				catch (InterruptedException e) {}
-				System.out.println(yourTurn);
+				//System.out.println(clientSocket.toString() + " " + yourTurn);
 				while (yourTurn) {
-					System.out.println("Its our turn");
+					System.out.println("It's your turn");
 					try {
 						if (first) {
-							output.write("Start".getBytes());
-							output.flush();
+							pw.println("Start");
+							pw.flush();
 						} else {
-							output.write("wait".getBytes());
-							output.flush();
+							pw.println("wait");
+							pw.flush();
 						}
 						String clientRequest = bir.readLine();
 						if (clientRequest.equals("Request Roll")) {
-							rollDice(game, output);
+							rollDice(game, pw);
 						}
 						String trustRoll = bir.readLine();
 						if (trustRoll.equals("true")) {
-							rollDice(game, output);
+							rollDice(game, pw);
 						} else if (trustRoll.equals("false")) {
 							s.prevRoll();
-							output.write(prevTotal);
-							output.flush();
+							pw.println(prevTotal);
+							pw.flush();
 						}
 						s.updateTurn();
 					} catch (IOException e) {
@@ -70,19 +68,13 @@ public class ServerThread extends Thread {
 			System.out.println("hello");
 		}
 	}
-	public void rollDice(gameClass game, OutputStream output)
+	public void rollDice(gameClass game, PrintWriter output) throws IOException
 	{
-		try {
-			game.rollDice();
-			output.write(game.getDice1());
-			output.flush();
-			output.write(game.getDice2());
-			output.flush();
-		}
-		catch (IOException e)
-		{
-			System.out.println("error");
-		}
+		game.rollDice();
+		output.println(game.getDice1());
+		output.flush();
+		output.println(game.getDice2());
+		output.flush();
 	}
 	public void updateTurn(boolean currentTurn)
 	{

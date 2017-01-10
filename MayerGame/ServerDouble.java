@@ -11,6 +11,7 @@ public class ServerDouble{
 		int x = 0;
 		ServerSocket serverSockets = new ServerSocket(serverPort);
 		Socket[] clientSockets = new Socket[maxPlayers];
+		Thread[] clients = new Thread[maxPlayers];
 		boolean isStopped = false;
 		boolean gameFull = false;
 		gameClass[] gameClasses = new gameClass[maxPlayers];
@@ -44,8 +45,10 @@ public class ServerDouble{
 		{
 
 			try {
-				new Thread(new PlayerInstance(clientSockets[x], 
-						"Player number "+ x +" has joined the game")).start();
+				clients[x] = new Thread(new PlayerInstance(clientSockets[x], 
+						"Player number "+ x +" has joined the game"));
+				clients[x].start();
+				
 				outputStreams[x].write("Start".getBytes());
 				outputStreams[x].flush();
 				String clientRequest = BIS[x].readLine();

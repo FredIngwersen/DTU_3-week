@@ -34,27 +34,27 @@ public class GameGui extends JFrame implements ActionListener {
 				try {
 					GameGui window = new GameGui();
 					window.frame.setVisible(true);
-					input = connectSocket.getInputStream();
+/*					input = connectSocket.getInputStream();
 					output = connectSocket.getOutputStream();
 					bir = new BufferedReader(new InputStreamReader(input));
 					bos = new BufferedOutputStream(connectSocket.getOutputStream());
 					System.out.println("ReadingFromServer");
 					String starter = bir.readLine();
 					System.out.println("read from server");
-					if (starter.equals("Start"))
-					{
-						start = true;
+					System.out.println(starter);
+					if(starter.contains("Start")){
+					start = true;
 						//TODO Change GUI remove true and false
 						bos.write("Request Roll".getBytes());
 						bos.flush();
 						dice1 = Integer.parseInt(bir.readLine());
 						dice2 = Integer.parseInt(bir.readLine());
 						//TODO Show dice
-					}
-
+				}*/
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
 			}
 		});
     }
@@ -91,9 +91,9 @@ public class GameGui extends JFrame implements ActionListener {
 		initialize();
 		try {
 			connectSocket = new Socket(ip, 8080);
-			System.out.println("connected");
+			System.out.println("Client connected to port 8080");
 		} catch (IOException e){
-			System.out.println("Couldn't connect to server");
+			System.out.println("Client couldn't connect to server");
 		}
 	}
 

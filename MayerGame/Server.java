@@ -15,6 +15,7 @@ public class Server implements Runnable{
 	boolean gameFull = false;
 	boolean first;
 	private ServerThread[] threadArray = new ServerThread[maxPlayers];
+	private BufferedReader[] inputStream = new BufferedReader[maxPlayers];
 	boolean turnDone = true;
 
 	public Server(int port)
@@ -22,63 +23,74 @@ public class Server implements Runnable{
 		this.serverPort = port;
 	}
 
-	public void run(){
-		System.out.println("its running server");
+	public void run() {
+		System.out.println("Server is running");
 		synchronized(this){
 			this.runningThread = Thread.currentThread();
 		}
 		openServerSocket();
-		while(!gameFull){
-			System.out.println("gamenotfullloop");
-			Socket clientSocket = null;
-			try {
-				clientSocket = this.serverSocket.accept();
-			} catch (IOException e) {
-				if(isStopped()) {
-					System.out.println("Server Stopped.") ;
-					return;
+		try {
+			while(!gameFull){
+				System.out.println("Waiting for players to fill up a game table");
+				Socket clientSocket = null;
+				try {
+					clientSocket = this.serverSocket.accept();
+				} catch (IOException e) {
+					if(isStopped()) {
+						System.out.println("Server Stopped.") ;
+						return;
+					}
+					throw new RuntimeException("Error accepting client connection", e);
 				}
-				throw new RuntimeException("Error accepting client connection", e);
+
+				threadArray[x] = new ServerThread(clientSocket, "Multithreaded Server", this);
+				threadArray[x].start();
+				inputStream[x] = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+				System.out.println("Thread [" + x + "] started");
+				x = x+1;
+				if (x == maxPlayers){
+					gameFull = true;
+				}
 			}
-			threadArray[x] = new ServerThread(clientSocket, "Multithreaded Server", this);
-			threadArray[x].start();
-			System.out.println("we started ThreadArray" + x);
-			x = x+1;
-			System.out.println(x);
-			if (x == maxPlayers){
-				gameFull = true;
-			}
-		}
-		x = 0;
-		while(isStopped() == false)
-		{
+			x = 0;
+			while(isStopped() == false)
+			{
 
-			first = true;
-			for (int i = x; i < maxPlayers; i ++) {
+				first = true;
+				for (int i = x; i < maxPlayers; i ++) {
 
-				threadArray[i].updateFirst(first);
-				first = false;
+					threadArray[i].updateFirst(first);		
 
-				while (turnDone)
-				for (int c = 0; c < maxPlayers; c++) {
-					if (c == i) {
+					first = false;
 
-						threadArray[c].updateTurn(true);
+					while (turnDone){
+						String clientString = inputStream[i].readLine();
+						System.out.println(clientString);
+					}
+						for (int c = 0; c < maxPlayers; c++) {
+							if (c == i) {
 
-					} else {
+								threadArray[c].updateTurn(true);
 
-						threadArray[c].updateTurn(false);
+							} else {
 
+								threadArray[c].updateTurn(false);
+
+							}
+						}
+					if (i == maxPlayers-1)
+					{
+						i = 0;
 					}
 				}
-				if (i == maxPlayers-1)
-				{
-					i = 0;
-				}
 			}
+			stop();
+			System.out.println("Server Stopped.") ;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		stop();
-		System.out.println("Server Stopped.") ;
 	}
 	public void prevRoll() {
 		int prevRoll = threadArray[x].game.getTotalp1();
