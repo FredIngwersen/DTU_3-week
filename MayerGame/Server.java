@@ -6,9 +6,9 @@ import java.net.Socket;
 
 public class Server implements Runnable{
 
-	int maxPlayers = 4;
+	int maxPlayers = 1;
 	int x = 0;
-	private int          serverPort   = 8080;
+	private int          serverPort;
 	private ServerSocket serverSocket = null;
 	private Thread       runningThread= null;
 	private boolean isStopped = false;
@@ -45,7 +45,8 @@ public class Server implements Runnable{
 			}
 		}
 		x = 0;
-		while(!isStopped())
+		while(isStopped() == false
+				)
 		{
 			first = true;
 			for (int i = x; i < maxPlayers; i ++) {
@@ -63,6 +64,7 @@ public class Server implements Runnable{
 
 			}
 		}
+		stop();
 		System.out.println("Server Stopped.") ;
 	}
 	public void prevRoll() {
@@ -88,7 +90,7 @@ public class Server implements Runnable{
 		try {
 			this.serverSocket = new ServerSocket(this.serverPort);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot open port 8080", e);
+			throw new RuntimeException("Cannot open port" + serverPort, e);
 		}
 	}
 }

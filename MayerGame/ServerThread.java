@@ -29,28 +29,33 @@ public class ServerThread extends Thread {
 			OutputStream output = clientSocket.getOutputStream();
 			BufferedReader bir = new BufferedReader(new InputStreamReader(input));
 
-			while (yourTurn) {
-				try {
-					if (first) {
-						output.write("Start".getBytes());
-						output.flush();
-					}
-					String clientRequest = bir.readLine();
-					if (clientRequest.equals("Request Roll")) {
-						rollDice(game, output);
-					}
-					String trustRoll = bir.readLine();
-					if (trustRoll.equals("true")) {
-						rollDice(game, output);
-					} else if (trustRoll.equals("false")) {
-						s.prevRoll();
-						output.write(prevTotal);
-						output.flush();
-					}
+			while (true) {
+				while (yourTurn)
+					try {
+						if (first) {
+							output.write("Start".getBytes());
+							output.flush();
+						} else {
+							output.write("wait".getBytes());
+							output.flush();
+						}
+						String clientRequest = bir.readLine();
+						if (clientRequest.equals("Request Roll")) {
+							rollDice(game, output);
+						}
+						String trustRoll = bir.readLine();
+						if (trustRoll.equals("true")) {
+							rollDice(game, output);
+						} else if (trustRoll.equals("false")) {
+							s.prevRoll();
+							output.write(prevTotal);
+							output.flush();
+						}
 
-				} catch (IOException e) {
-					System.out.println("Some sort of error");
-				}
+
+					} catch (IOException e) {
+						System.out.println("Some sort of error");
+					}
 			}
 		} catch (IOException e) {
 			System.out.println("hello");
@@ -78,6 +83,7 @@ public class ServerThread extends Thread {
 	{
 		this.first = first;
 	}
+
 }
 
 

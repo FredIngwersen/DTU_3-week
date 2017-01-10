@@ -3,7 +3,7 @@ package MayerGame;
 public class runnit {
 
 	public static void main(String[] args) {
-		Server server = new Server(1200);
+		Server server = new Server(8080);
 		new Thread(server).start();
 
 		try {
@@ -14,5 +14,4 @@ public class runnit {
 		System.out.println("Stopping Server");
 		server.stop();
 	}
-
 }

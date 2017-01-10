@@ -89,7 +89,7 @@ public class GameGui extends JFrame implements ActionListener {
 	public GameGui() {
 		initialize();
 		try {
-			connectSocket = new Socket(ip, 1200);
+			connectSocket = new Socket(ip, 8080);
 		} catch (IOException e){
 			System.out.println("Couldn't connect to server");
 		}
