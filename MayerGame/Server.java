@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class Server implements Runnable{
 
-	int maxPlayers = 1;
+	int maxPlayers = 2;
 	int x = 0;
 	private int          serverPort;
 	private ServerSocket serverSocket = null;
@@ -15,6 +15,7 @@ public class Server implements Runnable{
 	boolean gameFull = false;
 	boolean first;
 	private ServerThread[] threadArray = new ServerThread[maxPlayers];
+	boolean turnDone = true;
 
 	public Server(int port)
 	{
@@ -22,11 +23,13 @@ public class Server implements Runnable{
 	}
 
 	public void run(){
+		System.out.println("its running server");
 		synchronized(this){
 			this.runningThread = Thread.currentThread();
 		}
 		openServerSocket();
 		while(!gameFull){
+			System.out.println("gamenotfullloop");
 			Socket clientSocket = null;
 			try {
 				clientSocket = this.serverSocket.accept();
@@ -39,29 +42,39 @@ public class Server implements Runnable{
 			}
 			threadArray[x] = new ServerThread(clientSocket, "Multithreaded Server", this);
 			threadArray[x].start();
+			System.out.println("we started ThreadArray" + x);
 			x = x+1;
+			System.out.println(x);
 			if (x == maxPlayers){
-				gameFull = false;
+				gameFull = true;
 			}
 		}
 		x = 0;
-		while(isStopped() == false
-				)
+		while(isStopped() == false)
 		{
+
 			first = true;
 			for (int i = x; i < maxPlayers; i ++) {
-				threadArray[x].updateFirst(first);
+
+				threadArray[i].updateFirst(first);
 				first = false;
+
+				while (turnDone)
 				for (int c = 0; c < maxPlayers; c++) {
 					if (c == i) {
+
 						threadArray[c].updateTurn(true);
 
 					} else {
+
 						threadArray[c].updateTurn(false);
 
 					}
 				}
-
+				if (i == maxPlayers-1)
+				{
+					i = 0;
+				}
 			}
 		}
 		stop();
@@ -92,5 +105,8 @@ public class Server implements Runnable{
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot open port" + serverPort, e);
 		}
+	}
+	public void updateTurn() {
+		turnDone = false;
 	}
 }

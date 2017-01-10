@@ -38,8 +38,9 @@ public class GameGui extends JFrame implements ActionListener {
 					output = connectSocket.getOutputStream();
 					bir = new BufferedReader(new InputStreamReader(input));
 					bos = new BufferedOutputStream(connectSocket.getOutputStream());
-
+					System.out.println("ReadingFromServer");
 					String starter = bir.readLine();
+					System.out.println("read from server");
 					if (starter.equals("Start"))
 					{
 						start = true;
@@ -90,6 +91,7 @@ public class GameGui extends JFrame implements ActionListener {
 		initialize();
 		try {
 			connectSocket = new Socket(ip, 8080);
+			System.out.println("connected");
 		} catch (IOException e){
 			System.out.println("Couldn't connect to server");
 		}

@@ -13,7 +13,8 @@ public class ServerThread extends Thread {
 	protected String serverText = null;
 	boolean yourTurn = false;
 	int prevTotal;
-	boolean first = true;
+	boolean turnDone = false;
+	boolean first = false;
 	gameClass game = new gameClass();
 	Server s;
 
@@ -24,13 +25,21 @@ public class ServerThread extends Thread {
 	}
 
 	public void run() {
+		System.out.println("We made it");
 		try {
+			System.out.println("Tried");
 			InputStream input = clientSocket.getInputStream();
 			OutputStream output = clientSocket.getOutputStream();
 			BufferedReader bir = new BufferedReader(new InputStreamReader(input));
-
-			while (true) {
-				while (yourTurn)
+			System.out.println("Init variables");
+			while (1 == 1) {
+				try {
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException e) {}
+				System.out.println(yourTurn);
+				while (yourTurn) {
+					System.out.println("Its our turn");
 					try {
 						if (first) {
 							output.write("Start".getBytes());
@@ -51,11 +60,11 @@ public class ServerThread extends Thread {
 							output.write(prevTotal);
 							output.flush();
 						}
-
-
+						s.updateTurn();
 					} catch (IOException e) {
 						System.out.println("Some sort of error");
 					}
+				}
 			}
 		} catch (IOException e) {
 			System.out.println("hello");
