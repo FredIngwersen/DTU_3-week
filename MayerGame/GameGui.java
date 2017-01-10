@@ -1,8 +1,5 @@
 package MayerGame;
 
-//import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,7 +64,8 @@ public class GameGui extends JFrame implements ActionListener {
 		{
 			try {
 				bos.write("false".getBytes());
-
+				int prevroll = Integer.parseInt(bir.readLine());
+				//TODO show output of prevRoll
 
 			}catch (IOException e1) {
 				System.out.println("Error Button");
@@ -91,7 +89,7 @@ public class GameGui extends JFrame implements ActionListener {
 	public GameGui() {
 		initialize();
 		try {
-			connectSocket = new Socket(ip, 9000);
+			connectSocket = new Socket(ip, 1200);
 		} catch (IOException e){
 			System.out.println("Couldn't connect to server");
 		}
