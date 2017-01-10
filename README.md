@@ -1,8 +1,8 @@
 # DTU_3-week
 
-<b>OVERVIEW: Java Mayer Project</b>
+<b>OVERVIEW: Java Meyer Project</b>
 
-Mayer is usually considered a drinking game and is played with two die. The game can be played with 
+Meyer is usually considered a drinking game and is played with two die. The game can be played with 
 
 <b>Java Server:</b>
 

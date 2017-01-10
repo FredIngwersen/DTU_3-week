@@ -1,15 +1,10 @@
 package MayerGame;
-/*
-package IRC_Server;
 
 public class runnit {
 
 	public static void main(String[] args) {
-		IRC_Server server = new IRC_Server(1200);
+		Server server = new Server(8080);
 		new Thread(server).start();
 
-		
 	}
-
 }
-*/
