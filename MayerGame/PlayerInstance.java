@@ -1,64 +1,91 @@
 package MayerGame;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
+/**
+ * Created by William Ben Embarek on 10/01/2017.
+ */
+
 import java.io.*;
 import java.net.Socket;
 
+public class PlayerInstance extends Thread {
 
-public class PlayerInstance implements Runnable{
+	protected Socket clientSocket = null;
+	protected String serverText = null;
+	boolean yourTurn = false;
+	int prevTotal;
+	boolean turnDone = false;
+	boolean first = false;
+	gameClass game = new gameClass();
+	Server s;
 
-	protected Socket clientSocket  = null;
-	protected String serverText    = null;
-	protected boolean clientActive = true;
-	protected gameClass gameClass = new gameClass();
-	
-	public PlayerInstance(Socket clientSocket, String serverText) {
+	public PlayerInstance(Socket clientSocket, String serverText, Server p) {
 		this.clientSocket = clientSocket;
-		this.serverText   = serverText;
+		this.serverText = serverText;
+		s = p;
 	}
 
 	public void run() {
 		try {
-			InputStream input  = clientSocket.getInputStream();
-			BufferedReader BIS = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			OutputStream output = clientSocket.getOutputStream();
-
-			BufferedOutputStream bos = new BufferedOutputStream(
-					clientSocket.getOutputStream());
-			
-			long time = System.currentTimeMillis();
-			output.write(("Player has joined the game at " +
-					this.serverText + " - " +
-					time +
-					"").getBytes());
-
-			System.out.println("Request processed: " + time);
-			while(clientActive){
-				
-
-				String request = BIS.readLine();
-				
-				output.write("Start".getBytes());
-				output.flush();
-				String clientRequest = BIS.readLine();
-				if (clientRequest.equals("Request Roll"))
-				{
-					output.write(gameClass.rollDice());
-					output.flush();
+			BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true);
+			BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
+			System.out.println("Init variables");
+			while (1 == 1) {
+				try {
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException e) {}
+				//System.out.println(clientSocket.toString() + " " + yourTurn);
+				while (yourTurn) {
+					System.out.println("It's your turn");
+					try {
+						if (first) {
+							pw.println("Start");
+							pw.flush();
+						} else {
+							pw.println("wait");
+							pw.flush();
+						}
+						String clientRequest = bir.readLine();
+						if (clientRequest.equals("Request Roll")) {
+							rollDice(game, pw);
+						}
+						String trustRoll = bir.readLine();
+						if (trustRoll.equals("true")) {
+							rollDice(game, pw);
+						} else if (trustRoll.equals("false")) {
+							s.prevRoll();
+							pw.println(prevTotal);
+							pw.flush();
+						}
+						s.updateTurn();
+					} catch (IOException e) {
+						System.out.println("Some sort of error");
+					}
 				}
 			}
-			
-			output.close();
-			input.close();
 		} catch (IOException e) {
-			//report exception somewhere.
-			e.printStackTrace();
+			System.out.println("hello");
 		}
+	}
+	public void rollDice(gameClass game, PrintWriter output) throws IOException
+	{
+		game.rollDice();
+		output.println(game.getDice1());
+		output.flush();
+		output.println(game.getDice2());
+		output.flush();
+	}
+	public void updateTurn(boolean currentTurn)
+	{
+		yourTurn = currentTurn;
+	}
+	public void updateFirst(boolean first)
+	{
+		this.first = first;
 	}
 
 }
+
+
+

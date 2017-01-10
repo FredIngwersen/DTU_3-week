@@ -14,7 +14,7 @@ public class Server implements Runnable{
 	private boolean isStopped = false;
 	boolean gameFull = false;
 	boolean first;
-	private ServerThread[] threadArray = new ServerThread[maxPlayers];
+	private PlayerInstance[] threadArray = new PlayerInstance[maxPlayers];
 	private BufferedReader[] inputStream = new BufferedReader[maxPlayers];
 	boolean turnDone = true;
 
@@ -43,7 +43,7 @@ public class Server implements Runnable{
 					throw new RuntimeException("Error accepting client connection", e);
 				}
 
-				threadArray[x] = new ServerThread(clientSocket, "Multithreaded Server", this);
+				threadArray[x] = new PlayerInstance(clientSocket, "Multithreaded Server", this);
 				threadArray[x].start();
 				inputStream[x] = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
@@ -65,7 +65,7 @@ public class Server implements Runnable{
 					first = false;
 
 					while (turnDone){
-						String clientString = inputStream[i].readLine();
+						String clientString = inputStream[i].readLine();     // <--- Her er linjerne der fucker alt op.
 						System.out.println(clientString);
 					}
 						for (int c = 0; c < maxPlayers; c++) {
