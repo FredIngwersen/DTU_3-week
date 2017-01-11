@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.Socket;
 import javax.swing.*;
 
-public class GameGui extends JFrame implements ActionListener {
+public class GameGui extends JFrame {
 	private JFrame frame;
 	private JTextField userText;
 	private JTextArea chatWindow;
@@ -25,7 +25,7 @@ public class GameGui extends JFrame implements ActionListener {
 	static boolean start = false;
 	static int dice1;
 	static int dice2;
-	
+	static boolean ServerActive = true;
     // Launches the threads in designated components.
 	public static void main(String[] args) {
 
@@ -40,25 +40,26 @@ public class GameGui extends JFrame implements ActionListener {
 					output = connectSocket.getOutputStream();
 					bir = new BufferedReader(new InputStreamReader(input));
 					bos = new BufferedOutputStream(connectSocket.getOutputStream());
-					System.out.println("ReadingFromServer");
-					String starter = bir.readLine();
-					System.out.println("read from server");
-					System.out.println(starter);
-					if(starter.contains("Start")){
-						start = true;
-						System.out.println("Client here");
-						//TODO Change GUI remove true and false
-						bos.write("RR\n".getBytes());
-						bos.flush();
-						dice1 = Integer.parseInt(bir.readLine());
-						System.out.println(dice1);
-						dice2 = Integer.parseInt(bir.readLine());
-						System.out.println(dice2);
-						//TODO Show dice
-					}
-					else {
-						//TODO
-					}
+					
+						System.out.println("ReadingFromServer");
+						String starter = bir.readLine();
+						System.out.println("read from server");
+						System.out.println(starter);
+						if (starter.contains("Start")) {
+							start = true;
+							System.out.println("Client here");
+							//TODO Change GUI remove true and false
+							bos.write("RR\n".getBytes());
+							bos.flush();
+							dice1 = Integer.parseInt(bir.readLine());
+							System.out.println(dice1);
+							dice2 = Integer.parseInt(bir.readLine());
+							System.out.println(dice2);
+							//TODO Show dice
+						} else {
+
+						}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,32 +68,38 @@ public class GameGui extends JFrame implements ActionListener {
 		});
     }
 
-	@Override
+	/*@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == b2)
+		if (e.getSource() == b2	)
 		{
 			try {
-				bos.write("false".getBytes());
+				System.out.println("pressed false");
+				bos.write("false\n".getBytes());
+				bos.flush();
 				int prevroll = Integer.parseInt(bir.readLine());
+
 				//TODO show output of prevRoll
 
 			}catch (IOException e1) {
 				System.out.println("Error Button");
 			}
 		}
-		else if (e.getSource() == b3)
+		if (e.getSource() == b3)
 		{
 			try {
-				bos.write("true".getBytes());
+				System.out.println("pressed true");
+				bos.write("true\n".getBytes());
+				bos.flush();
 				dice1 = Integer.parseInt(bir.readLine());
 				dice2 = Integer.parseInt(bir.readLine());
+
 				//TODO display dice
 
 			}catch (IOException e1) {
 				System.out.println("Error Button");
 			}
 		}
-	}
+	} */
 
 	// Runs the GUI.
 	public GameGui() {
@@ -147,12 +154,46 @@ public class GameGui extends JFrame implements ActionListener {
 		// b2: The "false" button.
 		b2 = new JButton("FALSE");
 		b2.setBounds(0, 469, 275, 100);
+		b2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					System.out.println("pressed false");
+					bos.write("false\n".getBytes());
+					bos.flush();
+					int prevroll = Integer.parseInt(bir.readLine());
+
+					//TODO show output of prevRoll
+
+				}catch (IOException e1) {
+					System.out.println("Error Button");
+				}
+			}
+		});
 		frame.getContentPane().add(b2);
-		
+
 		// b3: The "true" button
 		b3 = new JButton("TRUE");
 		b3.setBounds(275, 469, 275, 100);
+		b3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					System.out.println("pressed true");
+					bos.write("true\n".getBytes());
+					bos.flush();
+					dice1 = Integer.parseInt(bir.readLine());
+					dice2 = Integer.parseInt(bir.readLine());
+
+					//TODO display dice
+
+				}catch (IOException e1) {
+					System.out.println("Error Button");
+				}
+			}
+		});
 		frame.getContentPane().add(b3);
+
 	}
 
 	public String getIp() {

@@ -58,14 +58,12 @@ public class PlayerInstance extends Thread {
 								System.out.println("Turn Done");
 								turnDone = true;
 								s.turnDoneServer();
-							}
-							String trustRoll = bir.readLine();
-							if (trustRoll.contains("true")) {
+							}else if (clientRequest.contains("true")) {
 								rollDice(game, pw);
 								System.out.println("Turn Done");
 								turnDone = true;
 								s.turnDoneServer();
-							} else if (trustRoll.contains("false")) {
+							} else if (clientRequest.contains("false")) {
 								s.prevRoll();
 								pw.println(prevTotal);
 								pw.flush();
