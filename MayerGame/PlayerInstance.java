@@ -55,21 +55,18 @@ public class PlayerInstance extends Thread {
 							if (clientRequest.contains("RR")) {
 								System.out.println("recieved dice request");
 								rollDice(game, pw);
-								System.out.println("Turn Done");
 								turnDone = true;
 								s.turnDoneServer();
 							}
 							String trustRoll = bir.readLine();
 							if (trustRoll.contains("true")) {
 								rollDice(game, pw);
-								System.out.println("Turn Done");
 								turnDone = true;
 								s.turnDoneServer();
 							} else if (trustRoll.contains("false")) {
 								s.prevRoll();
 								pw.println(prevTotal);
 								pw.flush();
-								System.out.println("Turn Done");
 								turnDone = true;
 								s.turnDoneServer();
 							}
