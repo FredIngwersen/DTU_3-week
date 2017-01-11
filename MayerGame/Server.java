@@ -65,26 +65,34 @@ public class Server implements Runnable{
 
 					first = false;
 					while (!doneWaiting){
+						try{Thread.sleep(0);}
+						catch (InterruptedException exc)
+						{
 
+						}
 					}
+					doneWaiting = false;
 					System.out.println("turnDone");
 					for (int c = 0; c < maxPlayers; c++) {
-						if (c == i) {
-
+						if (i+1 == maxPlayers)
+						{
+							i = -1;
+						}
+						if (c == i+1) {
 							threadArray[c].updateTurn(true);
 							System.out.println("turn updateded");
 
 						} else {
-
 							threadArray[c].updateTurn(false);
 							System.out.println("turn updated false");
 
 						}
 					}
-					if (i == maxPlayers-1)
+					if (x == maxPlayers-1)
 					{
-						i = 0;
+						x = -1;
 					}
+					x = x + 1;
 				}
 			}
 			stop();
