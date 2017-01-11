@@ -1,7 +1,5 @@
 package MayerGame;
 
-import com.sun.org.apache.xpath.internal.functions.FuncFalse;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
