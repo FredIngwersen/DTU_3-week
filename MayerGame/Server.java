@@ -14,9 +14,9 @@ public class Server implements Runnable{
 	private boolean isStopped = false;
 	boolean gameFull = false;
 	boolean first;
+	boolean doneWaiting = false;
 	private PlayerInstance[] threadArray = new PlayerInstance[maxPlayers];
 	private BufferedReader[] inputStream = new BufferedReader[maxPlayers];
-	boolean turnDone = true;
 
 	public Server(int port)
 	{
@@ -64,22 +64,23 @@ public class Server implements Runnable{
 					threadArray[i].updateTurn(true);
 
 					first = false;
-					 while (!threadArray[i].getTurnDone()){
+					while (!doneWaiting){
 
-					 }
-						for (int c = 0; c < maxPlayers; c++) {
-							if (c == i) {
+					}
+					System.out.println("turnDone");
+					for (int c = 0; c < maxPlayers; c++) {
+						if (c == i) {
 
-								threadArray[c].updateTurn(true);
-								System.out.println("turn updateded");
+							threadArray[c].updateTurn(true);
+							System.out.println("turn updateded");
 
-							} else {
+						} else {
 
-								threadArray[c].updateTurn(false);
-								System.out.println("turn updated false");
+							threadArray[c].updateTurn(false);
+							System.out.println("turn updated false");
 
-							}
 						}
+					}
 					if (i == maxPlayers-1)
 					{
 						i = 0;
@@ -119,7 +120,8 @@ public class Server implements Runnable{
 			throw new RuntimeException("Cannot open port" + serverPort, e);
 		}
 	}
-	public void updateTurn() {
-		turnDone = false;
+	public void turnDoneServer() {
+		doneWaiting = true;
 	}
+
 }
