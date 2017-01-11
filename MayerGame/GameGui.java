@@ -1,5 +1,7 @@
 package MayerGame;
 
+import com.sun.org.apache.xpath.internal.functions.FuncFalse;
+
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +28,7 @@ public class GameGui extends JFrame {
 	static int dice1;
 	static int dice2;
 	static boolean ServerActive = true;
+	static boolean waiting = false;
     // Launches the threads in designated components.
 	public static void main(String[] args) {
 
@@ -40,7 +43,7 @@ public class GameGui extends JFrame {
 					output = connectSocket.getOutputStream();
 					bir = new BufferedReader(new InputStreamReader(input));
 					bos = new BufferedOutputStream(connectSocket.getOutputStream());
-					
+					while (waiting == false) {
 						System.out.println("ReadingFromServer");
 						String starter = bir.readLine();
 						System.out.println("read from server");
@@ -56,10 +59,10 @@ public class GameGui extends JFrame {
 							dice2 = Integer.parseInt(bir.readLine());
 							System.out.println(dice2);
 							//TODO Show dice
-						} else {
-
+						} else if (starter.contains("wait")) {
+							waiting = true;
 						}
-
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
