@@ -34,6 +34,7 @@ public class GameGui extends JFrame implements ActionListener {
 				try {
 					GameGui window = new GameGui();
 					window.frame.setVisible(true);
+					window.initialize();
 
 					input = connectSocket.getInputStream();
 					output = connectSocket.getOutputStream();
