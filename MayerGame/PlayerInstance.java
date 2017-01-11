@@ -33,37 +33,47 @@ public class PlayerInstance extends Thread {
 			while (1 == 1) {
 				try {
 					Thread.sleep(1000);
+				} catch (InterruptedException cvd) {
 				}
-				catch (InterruptedException e) {}
-				//System.out.println(clientSocket.toString() + " " + yourTurn);
-				while (yourTurn) {
-					System.out.println("It's your turn");
-					try {
-						if (first) {
-							pw.println("Start");
-							pw.flush();
-						} else {
-							pw.println("wait");
-							pw.flush();
+
+					System.out.println(clientSocket.toString() + " " + yourTurn);
+					while (yourTurn) {
+						System.out.println("It's your turn");
+						try {
+							System.out.println(first);
+							if (first) {
+								System.out.println("output start");
+								bos.write("Start \n".getBytes());
+								bos.flush();
+							} else {
+								System.out.println("output wait");
+								bos.write("wait \n".getBytes());
+								bos.flush();
+							}
+							System.out.println("reading request");
+							String clientRequest = bir.readLine();
+							System.out.println(clientRequest);
+							if (clientRequest.contains("RR")) {
+								System.out.println("recieved dice request");
+								rollDice(game, pw);
+								turnDone = true;
+							}
+							String trustRoll = bir.readLine();
+							if (trustRoll.contains("true")) {
+								rollDice(game, pw);
+								turnDone = true;
+							} else if (trustRoll.contains("false")) {
+								s.prevRoll();
+								pw.println(prevTotal);
+								pw.flush();
+								turnDone = true;
+							}
+							s.updateTurn();
+						} catch (IOException e) {
+							System.out.println("Some sort of error");
 						}
-						String clientRequest = bir.readLine();
-						if (clientRequest.equals("Request Roll")) {
-							rollDice(game, pw);
-						}
-						String trustRoll = bir.readLine();
-						if (trustRoll.equals("true")) {
-							rollDice(game, pw);
-						} else if (trustRoll.equals("false")) {
-							s.prevRoll();
-							pw.println(prevTotal);
-							pw.flush();
-						}
-						s.updateTurn();
-					} catch (IOException e) {
-						System.out.println("Some sort of error");
 					}
 				}
-			}
 		} catch (IOException e) {
 			System.out.println("hello");
 		}
@@ -83,6 +93,9 @@ public class PlayerInstance extends Thread {
 	public void updateFirst(boolean first)
 	{
 		this.first = first;
+	}
+	public boolean getTurnDone() {
+		return turnDone;
 	}
 
 }

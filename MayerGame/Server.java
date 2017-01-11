@@ -60,22 +60,23 @@ public class Server implements Runnable{
 				first = true;
 				for (int i = x; i < maxPlayers; i ++) {
 
-					threadArray[i].updateFirst(first);		
+					threadArray[i].updateFirst(first);
+					threadArray[i].updateTurn(true);
 
 					first = false;
+					 while (!threadArray[i].getTurnDone()){
 
-					while (turnDone){
-						String clientString = inputStream[i].readLine();     // <--- Her er linjerne der fucker alt op.
-						System.out.println(clientString);
-					}
+					 }
 						for (int c = 0; c < maxPlayers; c++) {
 							if (c == i) {
 
 								threadArray[c].updateTurn(true);
+								System.out.println("turn updateded");
 
 							} else {
 
 								threadArray[c].updateTurn(false);
+								System.out.println("turn updated false");
 
 							}
 						}

@@ -34,7 +34,8 @@ public class GameGui extends JFrame implements ActionListener {
 				try {
 					GameGui window = new GameGui();
 					window.frame.setVisible(true);
-/*					input = connectSocket.getInputStream();
+
+					input = connectSocket.getInputStream();
 					output = connectSocket.getOutputStream();
 					bir = new BufferedReader(new InputStreamReader(input));
 					bos = new BufferedOutputStream(connectSocket.getOutputStream());
@@ -43,14 +44,20 @@ public class GameGui extends JFrame implements ActionListener {
 					System.out.println("read from server");
 					System.out.println(starter);
 					if(starter.contains("Start")){
-					start = true;
+						start = true;
+						System.out.println("Client here");
 						//TODO Change GUI remove true and false
-						bos.write("Request Roll".getBytes());
+						bos.write("RR\n".getBytes());
 						bos.flush();
 						dice1 = Integer.parseInt(bir.readLine());
+						System.out.println(dice1);
 						dice2 = Integer.parseInt(bir.readLine());
+						System.out.println(dice2);
 						//TODO Show dice
-				}*/
+					}
+					else {
+						//TODO
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
