@@ -8,7 +8,7 @@ import java.net.Socket;
 import javax.swing.*;
 
 
-public class GameGuiNew extends JFrame implements ActionListener {
+public class GameGuiNew extends JFrame {
 	//private JFrame frame;
 	private JTextField userText;
 	private JTextArea chatWindow;
@@ -18,6 +18,7 @@ public class GameGuiNew extends JFrame implements ActionListener {
 	private JButton b2;
 	private JButton b3;
 	private String ip;
+	static boolean gameStart = false;
 
 	private static Socket connectSocket;
 	static InputStream input;
@@ -35,75 +36,54 @@ public class GameGuiNew extends JFrame implements ActionListener {
 			public void run() {
 				try {
 					GameGuiNew window = new GameGuiNew();
-					//window.initialize();
+					input = connectSocket.getInputStream();
+					output = connectSocket.getOutputStream();
+					bir = new BufferedReader(new InputStreamReader(input));
+					bos = new BufferedOutputStream(connectSocket.getOutputStream());
+					while (!gameStart)
+					{
+						String gameStartS = bir.readLine();
+						if (gameStartS.contains("StartGame"))
+						{
+							gameStart = true;
+						}
+					}
+					window.initialize();
 					window.setVisible(true);
-					//window.repaint();
 					DiceThread thread = new DiceThread(window);
 					thread.start();
-					while (true){
-						input = connectSocket.getInputStream();
-						output = connectSocket.getOutputStream();
-						bir = new BufferedReader(new InputStreamReader(input));
-						bos = new BufferedOutputStream(connectSocket.getOutputStream());
-						System.out.println("ReadingFromServer");
-						String starter = bir.readLine();
-						System.out.println("read from server");
-						System.out.println(starter);
-						if(starter.contains("Start")){
-							start = true;
-							System.out.println("Client here");
-							//TODO Change GUI remove true and false
-							bos.write("RR\n".getBytes());
-							bos.flush();
-							dice1 = Integer.parseInt(bir.readLine());
-							dice2 = Integer.parseInt(bir.readLine());
-							System.out.println(dice1);
-							System.out.println(dice2);
-							//TODO Show dice
-						}
-						else {
-							//TODO
-						}
+					System.out.println("ReadingFromServer");
+					String starter = bir.readLine();
+					System.out.println("read from server");
+					System.out.println(starter);
+					if(starter.contains("Start")){
+						start = true;
+						System.out.println("Client here");
+						//TODO Change GUI remove true and false
+						bos.write("RR\n".getBytes());
+						bos.flush();
+						dice1 = Integer.parseInt(bir.readLine());
+						dice2 = Integer.parseInt(bir.readLine());
+						System.out.println(dice1);
+						System.out.println(dice2);
+						//TODO Show dice
+					}
+					else {
+						//TODO
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+
 
 			}
 		});
 
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == b2)
-		{
-			try {
-				bos.write("false".getBytes());
-				int prevroll = Integer.parseInt(bir.readLine());
-				//TODO show output of prevRoll
-
-			}catch (IOException e1) {
-				System.out.println("Error Button");
-			}
-		}
-		else if (e.getSource() == b3)
-		{
-			try {
-				bos.write("true".getBytes());
-				dice1 = Integer.parseInt(bir.readLine());
-				dice2 = Integer.parseInt(bir.readLine());
-				//TODO display dice
-
-			}catch (IOException e1) {
-				System.out.println("Error Button");
-			}
-		}
-	}
-
 	// Runs the GUI.
 	public GameGuiNew() {
-		initialize();
+
 		try {
 			connectSocket = new Socket("127.0.0.1", 8080);
 			System.out.println("Client connected to port 8080");
@@ -114,16 +94,16 @@ public class GameGuiNew extends JFrame implements ActionListener {
 
 	// Initialize the frame and its contents.
 	private void initialize() {
-		
+
 		// Main window.
 		// frame = new JFrame();
 		setTitle("A Game of Meyer!");
 		setSize(900, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getContentPane().setLayout();
+		getContentPane().setLayout(null);
 		setResizable(false);
-		
+
 		// ip = JOptionPane.showInputDialog(frame, "Input IP address");
 
 		// Chat box containing all sent messages.
@@ -167,11 +147,44 @@ public class GameGuiNew extends JFrame implements ActionListener {
 		b2 = new JButton("FALSE");
 		b2.setBounds(0, 469, 275, 100);
 		getContentPane().add(b2);
+		b2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					System.out.println("pressed false");
+					bos.write("false\n".getBytes());
+					bos.flush();
+					int prevroll = Integer.parseInt(bir.readLine());
+
+					//TODO show output of prevRoll
+
+				}catch (IOException e1) {
+					System.out.println("Error Button");
+				}
+			}
+		});
 
 		// b3: The "true" button
 		b3 = new JButton("TRUE");
 		b3.setBounds(275, 469, 275, 100);
 		getContentPane().add(b3);
+		b3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					System.out.println("pressed true");
+					bos.write("true\n".getBytes());
+					bos.flush();
+					dice1 = Integer.parseInt(bir.readLine());
+					dice2 = Integer.parseInt(bir.readLine());
+
+					//TODO display dice
+
+				}catch (IOException e1) {
+					System.out.println("Error Button");
+				}
+			}
+		});
 	}
 
 	public String getIp() {

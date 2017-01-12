@@ -35,44 +35,47 @@ public class PlayerInstance extends Thread {
 					Thread.sleep(1000);
 				} catch (InterruptedException cvd) {
 				}
-					System.out.println(clientSocket.toString() + " " + yourTurn);
-					while (yourTurn) {
-						System.out.println("It's your turn");
-						try {
-							System.out.println(first);
-							if (first) {
-								System.out.println("output start");
-								bos.write("Start \n".getBytes());
-								bos.flush();
-							} else {
-								System.out.println("output wait");
-								bos.write("wait \n".getBytes());
-								bos.flush();
-							}
-							System.out.println("reading request");
-							String clientRequest = bir.readLine();
-							System.out.println(clientRequest);
-							if (clientRequest.contains("RR")) {
-								System.out.println("recieved dice request");
-								rollDice(game, pw);
-								turnDone = true;
-								s.turnDoneServer();
-							}else if (clientRequest.contains("true")) {
-								rollDice(game, pw);
-								turnDone = true;
-								s.turnDoneServer();
-							} else if (clientRequest.contains("false")) {
-								s.prevRoll();
-								pw.println(prevTotal);
-								pw.flush();
-								turnDone = true;
-								s.turnDoneServer();
-							}
-						} catch (IOException e) {
-							System.out.println("Some sort of error");
+				if (s.gameFull) {
+					pw.println("StartGame");
+					pw.flush();
+				}
+				while (yourTurn) {
+					System.out.println("It's your turn");
+					try {
+						System.out.println(first);
+						if (first) {
+							System.out.println("output start");
+							bos.write("Start \n".getBytes());
+							bos.flush();
+						} else {
+							System.out.println("output wait");
+							bos.write("wait \n".getBytes());
+							bos.flush();
 						}
+						System.out.println("reading request");
+						String clientRequest = bir.readLine();
+						System.out.println(clientRequest);
+						if (clientRequest.contains("RR")) {
+							System.out.println("recieved dice request");
+							rollDice(game, pw);
+							turnDone = true;
+							s.turnDoneServer();
+						}else if (clientRequest.contains("true")) {
+							rollDice(game, pw);
+							turnDone = true;
+							s.turnDoneServer();
+						} else if (clientRequest.contains("false")) {
+							s.prevRoll();
+							pw.println(prevTotal);
+							pw.flush();
+							turnDone = true;
+							s.turnDoneServer();
+						}
+					} catch (IOException e) {
+						System.out.println("Some sort of error");
 					}
 				}
+			}
 		} catch (IOException e) {
 			System.out.println("hello");
 		}
