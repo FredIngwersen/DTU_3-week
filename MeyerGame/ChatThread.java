@@ -1,4 +1,4 @@
-package MayerGame;
+package MeyerGame;
 
 import java.io.BufferedReader;
 import java.io.IOException;

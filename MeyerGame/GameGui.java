@@ -1,4 +1,4 @@
-package MayerGame;
+package MeyerGame;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +24,7 @@ public class GameGui extends JFrame {
 	private static Socket chatSocket;
 	static InputStream chatInput;
 	static OutputStream chatOutput;
-	static BufferedReader chatBir;
+	static DataInputStream chatDis;
 	static PrintWriter chatPw;
 
 	private static Socket connectSocket;
@@ -50,8 +50,8 @@ public class GameGui extends JFrame {
 
 					chatInput = chatSocket.getInputStream();
 					chatOutput = chatSocket.getOutputStream();
-					chatPw = new PrintWriter(chatSocket.getOutputStream(),true);
-					chatBir = new BufferedReader(new InputStreamReader(chatSocket.getInputStream()));
+					chatPw = new PrintWriter(chatOutput,true);
+					chatDis = new DataInputStream(chatInput);
 
 					window.initialize();
 					window.setVisible(true);
@@ -139,18 +139,6 @@ public class GameGui extends JFrame {
 		scrollPane.setBounds(550, 0, 345, 547);
 		getContentPane().add(scrollPane);
 
-		/*
-		// Text input field.
-		userText = new JTextField();
-		userText.setBounds(550, 545, 280, 25);
-		getContentPane().add(userText);
-
-		// Send button - sends text from text field to the chat box.
-		send = new JButton("Send");
-		send.setBounds(830, 545, 65, 25);
-		getContentPane().add(send);
-		*/
-
 		userText = new JTextField();
 		userText.setBounds(550, 545, 280, 25);
 		getContentPane().add(userText);
@@ -182,15 +170,6 @@ public class GameGui extends JFrame {
 		diceBoard = new DiceBoard();
 		diceBoard.setBounds(0, 0, 550, 469);
 		getContentPane().add(diceBoard);
-
-		/*
-		// Dices
-		if (start = true) {
-			diceTest = new DicesTest();
-			diceTest.setBounds(150, 150, 128, 128);
-			frame.getContentPane().add(diceTest);
-		}
-		 */
 
 		// b2: The "false" button.
 		b2 = new JButton("FALSE");

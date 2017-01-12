@@ -1,4 +1,4 @@
-package MayerGame;
+package MeyerGame;
 
 /**
  * Created by William Ben Embarek on 10/01/2017.

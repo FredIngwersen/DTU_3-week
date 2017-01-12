@@ -1,4 +1,4 @@
-package MayerGame;
+package MeyerGame;
 
 import java.io.*;
 import java.net.ServerSocket;

@@ -1,4 +1,4 @@
-package MayerGame;
+package MeyerGame;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -1,4 +1,4 @@
-package MayerGame;
+package MeyerGame;
 
 import java.util.concurrent.ThreadLocalRandom;
 

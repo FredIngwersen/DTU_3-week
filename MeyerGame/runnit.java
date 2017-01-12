@@ -1,4 +1,4 @@
-package MayerGame;
+package MeyerGame;
 
 public class runnit {
 
