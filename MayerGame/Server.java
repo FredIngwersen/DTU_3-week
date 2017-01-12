@@ -18,12 +18,24 @@ public class Server implements Runnable{
 	private PlayerInstance[] threadArray = new PlayerInstance[maxPlayers];
 	private BufferedReader[] inputStream = new BufferedReader[maxPlayers];
 
+	private ServerSocket chatServer;
+	private ChatThread[] playerChat = new ChatThread[maxPlayers];
+	private ServerSocket chatSocket;
+
 	public Server(int port)
 	{
 		this.serverPort = port;
 	}
 
 	public void run() {
+		try {
+			chatSocket = new ServerSocket(8081);
+			System.out.println("connected to chat");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		System.out.println("Server is running");
 		synchronized(this){
 			this.runningThread = Thread.currentThread();
@@ -33,8 +45,10 @@ public class Server implements Runnable{
 			while(!gameFull){
 				System.out.println("Waiting for players to fill up a game table");
 				Socket clientSocket = null;
+				Socket chatSocket = null;
 				try {
 					clientSocket = this.serverSocket.accept();
+					chatSocket = this.chatSocket.accept();
 				} catch (IOException e) {
 					if(isStopped()) {
 						System.out.println("Server Stopped.") ;
@@ -42,7 +56,7 @@ public class Server implements Runnable{
 					}
 					throw new RuntimeException("Error accepting client connection", e);
 				}
-
+				playerChat[x] = new ChatThread(chatSocket); playerChat[x].start();
 				threadArray[x] = new PlayerInstance(clientSocket, "Multithreaded Server", this);
 				threadArray[x].start();
 				inputStream[x] = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -58,7 +72,7 @@ public class Server implements Runnable{
 			{
 
 				first = true;
-				for (int i = x; i < maxPlayers; i ++) {
+				for (int i = x; i < maxPlayers; i ++ ) {
 
 					threadArray[i].updateFirst(first);
 					threadArray[i].updateTurn(true);
@@ -67,30 +81,29 @@ public class Server implements Runnable{
 						try{Thread.sleep(0);}
 						catch (InterruptedException exc)
 						{
+
 						}
 					}
-					doneWaiting = false;
 					System.out.println("turnDone");
-					if (i+1 == maxPlayers)
-					{
-						i = -1;
-					}
-					for (int c = 0; c < maxPlayers; c++) {
-						if (c == i+1) {
-							threadArray[c].updateTurn(true);
-							System.out.println("turn updateded");
 
+					x = x + 1;
+					if (x == maxPlayers)
+					{
+						x = 0;
+					}
+					for (int c = 0; c < maxPlayers; c++ ) {
+						if (c == x) {
+							threadArray[c].updateTurn(true);
+							System.out.println("started next turn");
 						} else {
 							threadArray[c].updateTurn(false);
-							System.out.println("turn updated false");
-
+							System.out.println("ended all other turns");
 						}
 					}
-					if (x == maxPlayers-1)
-					{
-						x = -1;
-					}
-					x = x + 1;
+
+					threadArray[i].updateFirst(first);
+					doneWaiting = false;
+
 				}
 			}
 			stop();

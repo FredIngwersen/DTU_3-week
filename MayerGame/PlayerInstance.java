@@ -4,6 +4,7 @@ package MayerGame;
  * Created by William Ben Embarek on 10/01/2017.
  */
 
+
 import java.io.*;
 import java.net.Socket;
 
@@ -41,7 +42,7 @@ public class PlayerInstance extends Thread {
 					pw.flush();
 				}
 				while (yourTurn) {
-					System.out.println("It's your turn");
+					System.out.println("It's your turn" + clientSocket.getPort());
 					try {
 						System.out.println(first);
 						if (first) {
@@ -59,17 +60,17 @@ public class PlayerInstance extends Thread {
 						if (clientRequest.contains("RR")) {
 							System.out.println("recieved dice request");
 							rollDice(game, pw);
-							turnDone = true;
+							updateTurn(false);
 							s.turnDoneServer();
 						}else if (clientRequest.contains("true")) {
 							rollDice(game, pw);
-							turnDone = true;
+							updateTurn(false);
 							s.turnDoneServer();
 						} else if (clientRequest.contains("false")) {
 							s.prevRoll();
 							pw.println(prevTotal);
 							pw.flush();
-							turnDone = true;
+							updateTurn(false);
 							s.turnDoneServer();
 						}
 					} catch (IOException e) {

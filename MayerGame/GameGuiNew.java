@@ -19,6 +19,13 @@ public class GameGuiNew extends JFrame {
 	private JButton b3;
 	private String ip;
 	static boolean gameStart = false;
+	static boolean waiting = true;
+
+	private static Socket chatSocket;
+	static InputStream chatInput;
+	static OutputStream chatOutput;
+	static BufferedReader chatBir;
+	static PrintWriter chatPw;
 
 	private static Socket connectSocket;
 	static InputStream input;
@@ -40,6 +47,17 @@ public class GameGuiNew extends JFrame {
 					output = connectSocket.getOutputStream();
 					bir = new BufferedReader(new InputStreamReader(input));
 					bos = new BufferedOutputStream(connectSocket.getOutputStream());
+
+					chatInput = chatSocket.getInputStream();
+					chatOutput = chatSocket.getOutputStream();
+					chatPw = new PrintWriter(chatSocket.getOutputStream(),true);
+					chatBir = new BufferedReader(new InputStreamReader(chatSocket.getInputStream()));
+
+					window.initialize();
+					window.setVisible(true);
+					DiceThread thread = new DiceThread(window);
+					thread.start();
+
 					while (!gameStart)
 					{
 						String gameStartS = bir.readLine();
@@ -48,30 +66,29 @@ public class GameGuiNew extends JFrame {
 							gameStart = true;
 						}
 					}
-					window.initialize();
-					window.setVisible(true);
-					DiceThread thread = new DiceThread(window);
-					thread.start();
-					System.out.println("ReadingFromServer");
-					String starter = bir.readLine();
-					System.out.println("read from server");
-					System.out.println(starter);
-					if (starter.contains("SGame")){ starter = bir.readLine();}
-					if(starter.contains("Start")){
-						start = true;
-						System.out.println("Client here");
-						//TODO Change GUI remove true and false
-						bos.write("RR\n".getBytes());
-						bos.flush();
-						dice1 = Integer.parseInt(bir.readLine());
-						dice2 = Integer.parseInt(bir.readLine());
-						System.out.println(dice1);
-						System.out.println(dice2);
-						//TODO Show dice
-					}
-					else if (starter.contains("norm")){
-
-					}
+					do{
+						System.out.println("ReadingFromServer");
+						String starter = bir.readLine();
+						System.out.println("read from server");
+						System.out.println(starter);
+						if (starter.contains("SGame")) {
+							starter = bir.readLine();
+						}
+						if (starter.contains("Start")) {
+							start = true;
+							System.out.println("Client here");
+							//TODO Change GUI remove true and false
+							bos.write("RR\n".getBytes());
+							bos.flush();
+							dice1 = Integer.parseInt(bir.readLine());
+							dice2 = Integer.parseInt(bir.readLine());
+							System.out.println(dice1);
+							System.out.println(dice2);
+							//TODO Show dice
+						} else if (starter.contains("norm")) {
+							waiting = true;
+						}
+					} while (!waiting);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -88,6 +105,9 @@ public class GameGuiNew extends JFrame {
 		try {
 			connectSocket = new Socket("127.0.0.1", 8080);
 			System.out.println("Client connected to port 8080");
+			chatSocket = new Socket("127.0.0.1", 8081);
+			System.out.println("Client connected to chat /port 8081");
+
 		} catch (IOException e){
 			System.out.println("Client couldn't connect to server");
 		}
@@ -119,7 +139,7 @@ public class GameGuiNew extends JFrame {
 		scrollPane.setBounds(550, 0, 345, 547);
 		getContentPane().add(scrollPane);
 
-
+		/*
 		// Text input field.
 		userText = new JTextField();
 		userText.setBounds(550, 545, 280, 25);
@@ -129,6 +149,34 @@ public class GameGuiNew extends JFrame {
 		send = new JButton("Send");
 		send.setBounds(830, 545, 65, 25);
 		getContentPane().add(send);
+		*/
+
+		userText = new JTextField();
+		userText.setBounds(550, 545, 280, 25);
+		getContentPane().add(userText);
+		userText.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String msgText = userText.getText();
+				chatPw.println(msgText);
+				chatPw.flush();
+				userText.setText("");
+			}
+		});
+
+		// Send button - sends text from text field to the chat box.
+		send = new JButton("Send");
+		send.setBounds(830, 545, 65, 25);
+		getContentPane().add(send);
+		send.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String msgText = userText.getText();
+				chatPw.println(msgText);
+				chatPw.flush();
+				userText.setText("");
+			}
+		});
 
 		// Dice board.
 		diceBoard = new DiceBoard();
@@ -156,8 +204,11 @@ public class GameGuiNew extends JFrame {
 					bos.write("false\n".getBytes());
 					bos.flush();
 					String prevRoll = bir.readLine();
+					while (!isNumeric(prevRoll)){
+						prevRoll = bir.readLine();
+					}
 					System.out.println(prevRoll);
-
+					waiting = false;
 					//TODO show output of prevRoll
 
 				}catch (IOException e1) {
@@ -177,20 +228,28 @@ public class GameGuiNew extends JFrame {
 					System.out.println("pressed true");
 					bos.write("true\n".getBytes());
 					bos.flush();
-					dice1 = Integer.parseInt(bir.readLine());
-					dice2 = Integer.parseInt(bir.readLine());
+					String dice1String = bir.readLine();
+					while (!isNumeric(dice1String)){
+						dice1String = bir.readLine();
+					}
+					dice1 = Integer.parseInt(dice1String);
+					String dice2String = bir.readLine();
+					System.out.println(dice2String);
+					dice2 = Integer.parseInt(dice2String);
 
 					//TODO display dice
-
-				}catch (IOException e1) {
+					waiting = false;
+				}catch(IOException e1){
 					System.out.println("Error Button");
 				}
 			}
+
 		});
 	}
 
-	public String getIp() {
-		return ip;
+	public boolean isNumeric(String str)
+	{
+		return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 
 	public static boolean getRepaint() {

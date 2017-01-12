@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public class DiceBoard extends JPanel {
 
-	private Color c = new Color(25, 111, 61);
+	public Color c = new Color(25, 111, 61);
 	private Image[] images;
 
 	// Loads pictures from pathway

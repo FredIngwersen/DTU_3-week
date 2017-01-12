@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ChatThread implements Runnable {
+public class ChatThread extends Thread {
 	private Socket client;
 
 	
@@ -24,7 +24,7 @@ public class ChatThread implements Runnable {
 			out = new PrintWriter(client.getOutputStream(), true);
 			
 		} catch (IOException e) {
-			System.out.println("ERROR: chatThread");
+			System.out.println("ERROR - Can't setup chat input and output stream");
 		}
 		
 		while(true) {
