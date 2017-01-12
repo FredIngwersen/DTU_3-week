@@ -17,6 +17,7 @@ public class PlayerInstance extends Thread {
 	boolean first = false;
 	gameClass game = new gameClass();
 	Server s;
+	PrintWriter pw;
 
 	public PlayerInstance(Socket clientSocket, String serverText, Server p) {
 		this.clientSocket = clientSocket;
@@ -27,7 +28,7 @@ public class PlayerInstance extends Thread {
 	public void run() {
 		try {
 			BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true);
+			pw = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
 			System.out.println("Init variables");
 			while (1 == 1) {
@@ -36,7 +37,7 @@ public class PlayerInstance extends Thread {
 				} catch (InterruptedException cvd) {
 				}
 				if (s.gameFull) {
-					pw.println("StartGame");
+					pw.println("SGame");
 					pw.flush();
 				}
 				while (yourTurn) {
@@ -49,7 +50,7 @@ public class PlayerInstance extends Thread {
 							bos.flush();
 						} else {
 							System.out.println("output wait");
-							bos.write("wait \n".getBytes());
+							bos.write("norm \n".getBytes());
 							bos.flush();
 						}
 						System.out.println("reading request");

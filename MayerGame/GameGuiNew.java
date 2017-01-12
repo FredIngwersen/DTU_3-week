@@ -43,7 +43,7 @@ public class GameGuiNew extends JFrame {
 					while (!gameStart)
 					{
 						String gameStartS = bir.readLine();
-						if (gameStartS.contains("StartGame"))
+						if (gameStartS.contains("SGame"))
 						{
 							gameStart = true;
 						}
@@ -56,6 +56,7 @@ public class GameGuiNew extends JFrame {
 					String starter = bir.readLine();
 					System.out.println("read from server");
 					System.out.println(starter);
+					if (starter.contains("SGame")){ starter = bir.readLine();}
 					if(starter.contains("Start")){
 						start = true;
 						System.out.println("Client here");
@@ -68,8 +69,8 @@ public class GameGuiNew extends JFrame {
 						System.out.println(dice2);
 						//TODO Show dice
 					}
-					else {
-						//TODO
+					else if (starter.contains("norm")){
+
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -154,7 +155,7 @@ public class GameGuiNew extends JFrame {
 					System.out.println("pressed false");
 					bos.write("false\n".getBytes());
 					bos.flush();
-					int prevroll = Integer.parseInt(bir.readLine());
+					String prevRoll = bir.readLine();
 
 					//TODO show output of prevRoll
 

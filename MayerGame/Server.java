@@ -62,13 +62,11 @@ public class Server implements Runnable{
 
 					threadArray[i].updateFirst(first);
 					threadArray[i].updateTurn(true);
-
 					first = false;
 					while (!doneWaiting){
 						try{Thread.sleep(0);}
 						catch (InterruptedException exc)
 						{
-
 						}
 					}
 					doneWaiting = false;
