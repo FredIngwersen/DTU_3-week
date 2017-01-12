@@ -103,6 +103,3 @@ public class PlayerInstance extends Thread {
 	}
 
 }
-
-
-

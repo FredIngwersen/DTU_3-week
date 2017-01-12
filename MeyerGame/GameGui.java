@@ -1,5 +1,7 @@
 package MeyerGame;
 
+
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,13 +13,14 @@ import javax.swing.*;
 public class GameGui extends JFrame {
 	//private JFrame frame;
 	private JTextField userText;
-	private JTextArea chatWindow;
+	static JTextArea chatWindow;
 	public DiceBoard diceBoard;
 	private JScrollPane scrollPane;
 	private JButton send;
 	private JButton b2;
 	private JButton b3;
 	private String ip;
+	private static String chatMessage;
 	static boolean gameStart = false;
 	static boolean waiting = true;
 
@@ -38,72 +41,88 @@ public class GameGui extends JFrame {
 	private static boolean repaint = false;
 	
 	private static ClientOutputStream chatStream;
-	
 
 	// Launches the threads in designated components.
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GameGui window = new GameGui();
-					input = connectSocket.getInputStream();
-					output = connectSocket.getOutputStream();
-					bir = new BufferedReader(new InputStreamReader(input));
-					bos = new BufferedOutputStream(connectSocket.getOutputStream());
+		EventQueue.invokeLater(
+				new Runnable() {
+					public void run() {
+						try {
+							GameGui window = new GameGui();
+							input = connectSocket.getInputStream();
+							output = connectSocket.getOutputStream();
+							bir = new BufferedReader(new InputStreamReader(input));
+							bos = new BufferedOutputStream(connectSocket.getOutputStream());
 
-					chatInput = chatSocket.getInputStream();
-					chatOutput = chatSocket.getOutputStream();
-					chatPw = new PrintWriter(chatOutput,true);
-					chatBir = new BufferedReader(new InputStreamReader(chatInput));
+							chatInput = chatSocket.getInputStream();
+							chatOutput = chatSocket.getOutputStream();
+							chatPw = new PrintWriter(chatOutput,true);
+							chatBir = new BufferedReader(new InputStreamReader(chatInput));
 
-					
-					window.initialize();
-					window.setVisible(true);
-					DiceThread thread = new DiceThread(window);
-					thread.start();
-					
-					chatStream = new ClientOutputStream(window.chatWindow, chatBir);
-					chatStream.start();
+							
+							window.initialize();
+							window.setVisible(true);
+							DiceThread thread = new DiceThread(window);
+							thread.start();
+							
+							chatStream = new ClientOutputStream(window.chatWindow, chatBir);
+							chatStream.start();
 
-					while (!gameStart)
-					{
-						String gameStartS = bir.readLine();
-						if (gameStartS.contains("SGame"))
-						{
-							gameStart = true;
+							while (!gameStart)
+							{
+								String gameStartS = bir.readLine();
+								if (gameStartS.contains("SGame"))
+								{
+									gameStart = true;
+								}
+							}
+							do{
+								System.out.println("ReadingFromServer");
+								String starter = bir.readLine();
+								System.out.println("read from server");
+								System.out.println(starter);
+								if (starter.contains("SGame")) {
+									starter = bir.readLine();
+								}
+								if (starter.contains("Start")) {
+									start = true;
+									System.out.println("Client here");
+									//TODO Change GUI remove true and false
+									bos.write("RR\n".getBytes());
+									bos.flush();
+									dice1 = Integer.parseInt(bir.readLine());
+									dice2 = Integer.parseInt(bir.readLine());
+									System.out.println(dice1);
+									System.out.println(dice2);
+									//TODO Show dice
+								} else if (starter.contains("norm")) {
+									waiting = true;
+									window.b2.setEnabled(true);
+									window.b3.setEnabled(true);
+								}
+							} while (!waiting);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
+
+
 					}
-					do{
-						System.out.println("ReadingFromServer");
-						String starter = bir.readLine();
-						System.out.println("read from server");
-						System.out.println(starter);
-						if (starter.contains("SGame")) {
-							starter = bir.readLine();
-						}
-						if (starter.contains("Start")) {
-							start = true;
-							System.out.println("Client here");
-							//TODO Change GUI remove true and false
-							bos.write("RR\n".getBytes());
-							bos.flush();
-							dice1 = Integer.parseInt(bir.readLine());
-							dice2 = Integer.parseInt(bir.readLine());
-							System.out.println(dice1);
-							System.out.println(dice2);
-							//TODO Show dice
-						} else if (starter.contains("norm")) {
-							waiting = true;
-						}
-					} while (!waiting);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				});
 
+	}
 
-			}
-		});
+	private void whileChatting() throws IOException{
+		chatMessage = chatBir.readLine();
+		showMessage("\n" + chatMessage);
+	}
 
+	private void showMessage(final String message){
+		SwingUtilities.invokeLater(
+				new Runnable(){
+					public void run(){
+						chatWindow.append(message);
+					}
+				});
 	}
 
 	// Runs the GUI.
@@ -138,7 +157,6 @@ public class GameGui extends JFrame {
 		chatWindow = new JTextArea();
 		// chatWindow.setBounds(550, 0, 345, 547);
 		// getContentPane().add(chatWindow);
-		chatWindow.setEditable(false);
 		chatWindow.setLineWrap(true);
 		chatWindow.setWrapStyleWord(true);
 		scrollPane = new JScrollPane(chatWindow);
@@ -146,8 +164,18 @@ public class GameGui extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(550, 0, 345, 547);
 		getContentPane().add(scrollPane);
-		
-		
+
+		/*
+		// Text input field.
+		userText = new JTextField();
+		userText.setBounds(550, 545, 280, 25);
+		getContentPane().add(userText);
+
+		// Send button - sends text from text field to the chat box.
+		send = new JButton("Send");
+		send.setBounds(830, 545, 65, 25);
+		getContentPane().add(send);
+		 */
 
 		userText = new JTextField();
 		userText.setBounds(550, 545, 280, 25);
@@ -181,6 +209,15 @@ public class GameGui extends JFrame {
 		diceBoard.setBounds(0, 0, 550, 469);
 		getContentPane().add(diceBoard);
 
+		/*
+		// Dices
+		if (start = true) {
+			diceTest = new DicesTest();
+			diceTest.setBounds(150, 150, 128, 128);
+			frame.getContentPane().add(diceTest);
+		}
+		 */
+
 		// b2: The "false" button.
 		b2 = new JButton("FALSE");
 		b2.setBounds(0, 469, 275, 100);
@@ -198,6 +235,8 @@ public class GameGui extends JFrame {
 					}
 					System.out.println(prevRoll);
 					waiting = false;
+					b2.setEnabled(false);
+					b3.setEnabled(false);
 					//TODO show output of prevRoll
 
 				}catch (IOException e1) {
@@ -223,11 +262,15 @@ public class GameGui extends JFrame {
 					}
 					dice1 = Integer.parseInt(dice1String);
 					String dice2String = bir.readLine();
+					System.out.println(dice1String);
 					System.out.println(dice2String);
 					dice2 = Integer.parseInt(dice2String);
 
 					//TODO display dice
 					waiting = false;
+					b2.setEnabled(false);
+					b3.setEnabled(false);
+					
 				}catch(IOException e1){
 					System.out.println("Error Button");
 				}
@@ -245,6 +288,7 @@ public class GameGui extends JFrame {
 				});
 		
 	}
+
 
 	public boolean isNumeric(String str)
 	{

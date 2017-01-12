@@ -1,4 +1,5 @@
 package MeyerGame;
+
 import java.util.LinkedList;
 /**
  * Created by William Ben Embarek on 04/01/2017.
@@ -43,4 +44,3 @@ public class messages {
 	}
 
 }
-

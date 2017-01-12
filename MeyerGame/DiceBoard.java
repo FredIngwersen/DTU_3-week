@@ -19,21 +19,21 @@ public class DiceBoard extends JPanel {
 	public DiceBoard() {
 		try {
 			images = new Image[6];
-			images[0] = ImageIO.read(new File("MayerGame/img/dice1.png"));
-			images[1] = ImageIO.read(new File("MayerGame/img/dice2.png"));
-			images[2] = ImageIO.read(new File("MayerGame/img/dice3.png"));
-			images[3] = ImageIO.read(new File("MayerGame/img/dice4.png"));
-			images[4] = ImageIO.read(new File("MayerGame/img/dice5.png"));
-			images[5] = ImageIO.read(new File("MayerGame/img/dice6.png"));
+			images[0] = ImageIO.read(new File("MeyerGame/img/dice1.png"));
+			images[1] = ImageIO.read(new File("MeyerGame/img/dice2.png"));
+			images[2] = ImageIO.read(new File("MeyerGame/img/dice3.png"));
+			images[3] = ImageIO.read(new File("MeyerGame/img/dice4.png"));
+			images[4] = ImageIO.read(new File("MeyerGame/img/dice5.png"));
+			images[5] = ImageIO.read(new File("MeyerGame/img/dice6.png"));
 		} catch (IOException e) {
 				try {
 					images = new Image[6];
-					images[0] = ImageIO.read(new File("src/MayerGame/img/dice1.png"));
-					images[1] = ImageIO.read(new File("src/MayerGame/img/dice2.png"));
-					images[2] = ImageIO.read(new File("src/MayerGame/img/dice3.png"));
-					images[3] = ImageIO.read(new File("src/MayerGame/img/dice4.png"));
-					images[4] = ImageIO.read(new File("src/MayerGame/img/dice5.png"));
-					images[5] = ImageIO.read(new File("src/MayerGame/img/dice6.png"));
+					images[0] = ImageIO.read(new File("src/MeyerGame/img/dice1.png"));
+					images[1] = ImageIO.read(new File("src/MeyerGame/img/dice2.png"));
+					images[2] = ImageIO.read(new File("src/MeyerGame/img/dice3.png"));
+					images[3] = ImageIO.read(new File("src/MeyerGame/img/dice4.png"));
+					images[4] = ImageIO.read(new File("src/MeyerGame/img/dice5.png"));
+					images[5] = ImageIO.read(new File("src/MeyerGame/img/dice6.png"));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

@@ -1,5 +1,6 @@
 package MeyerGame;
 
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,7 +23,7 @@ public class Server implements Runnable{
 	private ChatThread[] playerChat = new ChatThread[maxPlayers];
 	private ServerSocket chatSocket;
 	
-	private GameGui newGame = new GameGui();
+
 
 	public Server(int port)
 	{
