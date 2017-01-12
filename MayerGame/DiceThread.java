@@ -1,9 +1,9 @@
 package MayerGame;
 
 public class DiceThread extends Thread {
-	public GameGui parent;
+	public GameGuiNew parent;
 
-	public DiceThread(GameGui p) {
+	public DiceThread(GameGuiNew p) {
 		parent = p;
 	}
 

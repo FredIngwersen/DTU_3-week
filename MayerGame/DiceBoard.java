@@ -1,16 +1,13 @@
 package MayerGame;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class DiceBoard extends JPanel {
@@ -58,20 +55,20 @@ public class DiceBoard extends JPanel {
 		g.setColor(c);
 		g.fillRect(0, 0, getWidth(), getHeight());
 	}
-	//drawDice(GameGui.start);
+	//drawDice(GameGuiNew.start);
 	public void DrawDices() {
 		if (isShowing()) {
 			Graphics g = getGraphics();
-			g.drawImage(images[GameGui.getDice1()], 100, 200, null);
-			g.drawImage(images[GameGui.getDice2()], 250, 200, null);
+			g.drawImage(images[GameGuiNew.getDice1()], 100, 200, null);
+			g.drawImage(images[GameGuiNew.getDice2()], 250, 200, null);
 		}
 	}
 	/*
 	public void drawDice(boolean start) {
 		if (start == true) {
 			Graphics g = getGraphics();
-			g.drawImage(images[GameGui.getDice1()], 100, 200, null);
-			g.drawImage(images[GameGui.getDice2()], 250, 200, null);
+			g.drawImage(images[GameGuiNew.getDice1()], 100, 200, null);
+			g.drawImage(images[GameGuiNew.getDice2()], 250, 200, null);
 		}
 	}
 	 */

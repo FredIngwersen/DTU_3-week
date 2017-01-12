@@ -101,7 +101,7 @@ public class GameGui extends JFrame {
 	} */
 /*
 	// Runs the GUI.
-	public GameGui() {
+	public GameGuiNew() {
 		initialize();
 		try {
 			connectSocket = new Socket(ip, 8080);
