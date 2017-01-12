@@ -156,6 +156,7 @@ public class GameGuiNew extends JFrame {
 					bos.write("false\n".getBytes());
 					bos.flush();
 					String prevRoll = bir.readLine();
+					System.out.println(prevRoll);
 
 					//TODO show output of prevRoll
 

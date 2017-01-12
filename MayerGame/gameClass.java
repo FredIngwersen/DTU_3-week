@@ -66,11 +66,11 @@ public class gameClass {
 		}
 	}
 
-	public int getDice1() {
+	public int getServerDice1() {
 		return dice1-1;
 	}
 
-	public int getDice2() {
+	public int getServerDice2() {
 		return dice2-1;
 	}
 

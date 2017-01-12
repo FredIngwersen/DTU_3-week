@@ -84,9 +84,9 @@ public class PlayerInstance extends Thread {
 	public void rollDice(gameClass game, PrintWriter output) throws IOException
 	{
 		game.rollDice();
-		output.println(game.getDice1());
+		output.println(game.getServerDice1());
 		output.flush();
-		output.println(game.getDice2());
+		output.println(game.getServerDice2());
 		output.flush();
 	}
 	public void updateTurn(boolean currentTurn)
