@@ -70,8 +70,8 @@ public class DiceBoard extends JPanel {
 	public void DrawDices() {
 		if (isShowing()) {
 			Graphics g = getGraphics();
-			g.drawImage(images[GameGuiNew.getDice1()], 100, 200, null);
-			g.drawImage(images[GameGuiNew.getDice2()], 250, 200, null);
+			g.drawImage(images[GameGui.getDice1()], 100, 200, null);
+			g.drawImage(images[GameGui.getDice2()], 250, 200, null);
 		}
 	}
 	/*

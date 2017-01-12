@@ -8,7 +8,7 @@ import java.net.Socket;
 import javax.swing.*;
 
 
-public class GameGuiNew extends JFrame {
+public class GameGui extends JFrame {
 	//private JFrame frame;
 	private JTextField userText;
 	private JTextArea chatWindow;
@@ -42,7 +42,7 @@ public class GameGuiNew extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GameGuiNew window = new GameGuiNew();
+					GameGui window = new GameGui();
 					input = connectSocket.getInputStream();
 					output = connectSocket.getOutputStream();
 					bir = new BufferedReader(new InputStreamReader(input));
@@ -100,7 +100,7 @@ public class GameGuiNew extends JFrame {
 	}
 
 	// Runs the GUI.
-	public GameGuiNew() {
+	public GameGui() {
 
 		try {
 			connectSocket = new Socket("127.0.0.1", 8080);
