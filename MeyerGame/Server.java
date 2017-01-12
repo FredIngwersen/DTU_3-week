@@ -21,6 +21,8 @@ public class Server implements Runnable{
 	private ServerSocket chatServer;
 	private ChatThread[] playerChat = new ChatThread[maxPlayers];
 	private ServerSocket chatSocket;
+	
+	private GameGui newGame = new GameGui();
 
 	public Server(int port)
 	{
@@ -56,7 +58,7 @@ public class Server implements Runnable{
 					}
 					throw new RuntimeException("Error accepting client connection", e);
 				}
-				playerChat[x] = new ChatThread(chatSocket); playerChat[x].start();
+				playerChat[x] = new ChatThread(chatSocket, this); playerChat[x].start();
 				threadArray[x] = new PlayerInstance(clientSocket, "Multithreaded Server", this);
 				threadArray[x].start();
 				inputStream[x] = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -113,6 +115,15 @@ public class Server implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendToAll(String str) throws IOException {
+		for(int i = 0; i < playerChat.length; i++){
+			if(playerChat[i] != null){
+				playerChat[i].sendMessage(str);
+			}
+		}
+	}
+	
 	public void prevRoll() {
 		int v = x;
 		if (v == 0) {

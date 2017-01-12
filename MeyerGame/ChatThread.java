@@ -8,17 +8,19 @@ import java.net.Socket;
 
 public class ChatThread extends Thread {
 	private Socket client;
-
+	BufferedReader in = null;
+	PrintWriter out = null;
+	Server parent;
 	
 	//Constructor
-	public ChatThread(Socket client) {
+	public ChatThread(Socket client, Server parent) {
 		this.client = client;
+		this.parent = parent;
 	}
 	
 	public void run() {
 		String text;
-		BufferedReader in = null;
-		PrintWriter out = null;
+
 		try {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
@@ -26,18 +28,31 @@ public class ChatThread extends Thread {
 		} catch (IOException e) {
 			System.out.println("ERROR - Can't setup chat input and output stream");
 		}
+
 		
-		while(true) {
-			try {
-				// Reads input and returns it to clients
-				text = in.readLine();
-				out.println(text);
-				//textArea.append(text); - BACKDOOR FOR SERVER TO READ MESSAGES!
-			} catch(IOException e) {
-				System.out.println("ERROR: chatThread");
+		try {
+			text = in.readLine();
+			while(text != null) {
+				try {
+					// Reads input and returns it to clients
+					parent.sendToAll(text);
+					//textArea.append(text); - BACKDOOR FOR SERVER TO READ MESSAGES!
+					text = in.readLine();
+				} catch(IOException e) {
+					System.out.println("ERROR: chatThread");
+				}
 			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
+	
+	public void sendMessage(String message) throws IOException {
+        
+        out.println(message);
+        out.flush();
+    }
 	
 	//INCLUDE THE BELOW IN SERVER SCRIPTCODE
 	/*

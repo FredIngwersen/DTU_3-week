@@ -24,7 +24,7 @@ public class GameGui extends JFrame {
 	private static Socket chatSocket;
 	static InputStream chatInput;
 	static OutputStream chatOutput;
-	static DataInputStream chatDis;
+	static BufferedReader chatBir;
 	static PrintWriter chatPw;
 
 	private static Socket connectSocket;
@@ -36,6 +36,9 @@ public class GameGui extends JFrame {
 	static int dice1;
 	static int dice2;
 	private static boolean repaint = false;
+	
+	private static ClientOutputStream chatStream;
+	
 
 	// Launches the threads in designated components.
 	public static void main(String[] args) {
@@ -51,12 +54,16 @@ public class GameGui extends JFrame {
 					chatInput = chatSocket.getInputStream();
 					chatOutput = chatSocket.getOutputStream();
 					chatPw = new PrintWriter(chatOutput,true);
-					chatDis = new DataInputStream(chatInput);
+					chatBir = new BufferedReader(new InputStreamReader(chatInput));
 
+					
 					window.initialize();
 					window.setVisible(true);
 					DiceThread thread = new DiceThread(window);
 					thread.start();
+					
+					chatStream = new ClientOutputStream(window.chatWindow, chatBir);
+					chatStream.start();
 
 					while (!gameStart)
 					{
@@ -131,6 +138,7 @@ public class GameGui extends JFrame {
 		chatWindow = new JTextArea();
 		// chatWindow.setBounds(550, 0, 345, 547);
 		// getContentPane().add(chatWindow);
+		chatWindow.setEditable(false);
 		chatWindow.setLineWrap(true);
 		chatWindow.setWrapStyleWord(true);
 		scrollPane = new JScrollPane(chatWindow);
@@ -138,6 +146,8 @@ public class GameGui extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(550, 0, 345, 547);
 		getContentPane().add(scrollPane);
+		
+		
 
 		userText = new JTextField();
 		userText.setBounds(550, 545, 280, 25);
@@ -224,6 +234,16 @@ public class GameGui extends JFrame {
 			}
 
 		});
+	}
+	
+	public void updateChat(String str) {
+		SwingUtilities.invokeLater(
+				new Runnable() {
+					public void run(){
+						chatWindow.append("\n" + str);
+					}
+				});
+		
 	}
 
 	public boolean isNumeric(String str)
