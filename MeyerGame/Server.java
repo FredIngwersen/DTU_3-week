@@ -71,10 +71,9 @@ public class Server implements Runnable{
 				}
 			}
 			x = 0;
+			first = true;
 			while(isStopped() == false)
 			{
-
-				first = true;
 				for (int i = x; i < maxPlayers; i ++ ) {
 
 					threadArray[i].updateFirst(first);
@@ -86,6 +85,9 @@ public class Server implements Runnable{
 						{
 
 						}
+					}
+					if (first) {
+						break;
 					}
 					System.out.println("turnDone");
 
@@ -133,6 +135,10 @@ public class Server implements Runnable{
 		int prevRoll = threadArray[v-1].game.getTotalp1();
 		for (int c = 0; c < maxPlayers; c++) {
 			threadArray[c].prevTotal = prevRoll;
+			threadArray[c].pw.println("endGame");
+			threadArray[c].pw.flush();
+			threadArray[c].pw.println(prevRoll);
+			threadArray[c].pw.flush();
 		}
 		first = true;
 	}
@@ -160,5 +166,5 @@ public class Server implements Runnable{
 	public void turnDoneServer() {
 		doneWaiting = true;
 	}
-
+	public void roundDone() { first = true;}
 }

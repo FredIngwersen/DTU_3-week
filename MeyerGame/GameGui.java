@@ -13,6 +13,8 @@ import javax.swing.*;
 public class GameGui extends JFrame {
 	//private JFrame frame;
 	private JTextField userText;
+	private JTextField ipAddress;
+	private JTextField username;
 	static JTextArea chatWindow;
 	public DiceBoard diceBoard;
 	private JScrollPane scrollPane;
@@ -97,8 +99,6 @@ public class GameGui extends JFrame {
 									//TODO Show dice
 								} else if (starter.contains("norm")) {
 									waiting = true;
-									window.b2.setEnabled(true);
-									window.b3.setEnabled(true);
 								}
 							} while (!waiting);
 						} catch (Exception e) {
@@ -110,25 +110,11 @@ public class GameGui extends JFrame {
 				});
 
 	}
-
-	private void whileChatting() throws IOException{
-		chatMessage = chatBir.readLine();
-		showMessage("\n" + chatMessage);
-	}
-
-	private void showMessage(final String message){
-		SwingUtilities.invokeLater(
-				new Runnable(){
-					public void run(){
-						chatWindow.append(message);
-					}
-				});
-	}
-
 	// Runs the GUI.
 	public GameGui() {
 
 		try {
+			setupConnection();
 			connectSocket = new Socket("127.0.0.1", 8080);
 			System.out.println("Client connected to port 8080");
 			chatSocket = new Socket("127.0.0.1", 8081);
@@ -144,47 +130,37 @@ public class GameGui extends JFrame {
 
 		// Main window.
 		// frame = new JFrame();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int screenW = (int)(Math.round(screenSize.width*0.50));
+	    int screenH = (int)(Math.round(screenSize.height*0.60));
+		
 		setTitle("A Game of Meyer!");
-		setSize(900, 600);
+		setSize(screenW, screenH);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setResizable(false);
 
-		// ip = JOptionPane.showInputDialog(frame, "Input IP address");
-
 		// Chat box containing all sent messages.
 		chatWindow = new JTextArea();
-		// chatWindow.setBounds(550, 0, 345, 547);
-		// getContentPane().add(chatWindow);
 		chatWindow.setLineWrap(true);
 		chatWindow.setWrapStyleWord(true);
 		scrollPane = new JScrollPane(chatWindow);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(550, 0, 345, 547);
+		scrollPane.setBounds((int)(Math.round(screenW*0.6)), 0, 
+				(int)(Math.round(screenW*0.4)), (int)(Math.round(screenH*0.9)));
 		getContentPane().add(scrollPane);
 
-		/*
-		// Text input field.
 		userText = new JTextField();
-		userText.setBounds(550, 545, 280, 25);
-		getContentPane().add(userText);
-
-		// Send button - sends text from text field to the chat box.
-		send = new JButton("Send");
-		send.setBounds(830, 545, 65, 25);
-		getContentPane().add(send);
-		 */
-
-		userText = new JTextField();
-		userText.setBounds(550, 545, 280, 25);
+		userText.setBounds((int)(Math.round(screenW*0.6)), (int)(Math.round(screenH*0.9)),
+				(int)(Math.round(screenW*0.3)), (int)(Math.round(screenH*0.06)));
 		getContentPane().add(userText);
 		userText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String msgText = userText.getText();
-				chatPw.println(msgText);
+				chatPw.println(username.getText() + ": " + msgText);
 				chatPw.flush();
 				userText.setText("");
 			}
@@ -192,13 +168,14 @@ public class GameGui extends JFrame {
 
 		// Send button - sends text from text field to the chat box.
 		send = new JButton("Send");
-		send.setBounds(830, 545, 65, 25);
+		send.setBounds((int)(Math.round(screenW*0.9)), (int)(Math.round(screenH*0.9)),
+				(int)(Math.round(screenW*0.1)), (int)(Math.round(screenH*0.06)));
 		getContentPane().add(send);
 		send.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String msgText = userText.getText();
-				chatPw.println(msgText);
+				chatPw.println(username.getText() + ": " + msgText);
 				chatPw.flush();
 				userText.setText("");
 			}
@@ -206,21 +183,14 @@ public class GameGui extends JFrame {
 
 		// Dice board.
 		diceBoard = new DiceBoard();
-		diceBoard.setBounds(0, 0, 550, 469);
+		diceBoard.setBounds(0, 0, 
+				(int)(Math.round(screenW*0.6)), (int)(Math.round(screenH*0.81)));
 		getContentPane().add(diceBoard);
-
-		/*
-		// Dices
-		if (start = true) {
-			diceTest = new DicesTest();
-			diceTest.setBounds(150, 150, 128, 128);
-			frame.getContentPane().add(diceTest);
-		}
-		 */
 
 		// b2: The "false" button.
 		b2 = new JButton("FALSE");
-		b2.setBounds(0, 469, 275, 100);
+		b2.setBounds(0, (int)(Math.round(screenH*0.81)), 
+				(int)(Math.round(screenW*0.3)), (int)(Math.round(screenH*0.15)));
 		getContentPane().add(b2);
 		b2.addActionListener(new ActionListener() {
 			@Override
@@ -247,7 +217,8 @@ public class GameGui extends JFrame {
 
 		// b3: The "true" button
 		b3 = new JButton("TRUE");
-		b3.setBounds(275, 469, 275, 100);
+		b3.setBounds((int)(Math.round(screenW*0.3)), (int)(Math.round(screenH*0.81)), 
+				(int)(Math.round(screenW*0.3)), (int)(Math.round(screenH*0.15)));
 		getContentPane().add(b3);
 		b3.addActionListener(new ActionListener() {
 			@Override
@@ -277,7 +248,24 @@ public class GameGui extends JFrame {
 			}
 
 		});
+		
 	}
+	
+
+	private void whileChatting() throws IOException {
+		chatMessage = chatBir.readLine();
+		showMessage("\n" + chatMessage);
+	}
+
+	private void showMessage(final String message){
+		SwingUtilities.invokeLater(
+				new Runnable(){
+					public void run(){
+						chatWindow.append(message);
+					}
+				});
+	}
+
 	
 	public void updateChat(String str) {
 		SwingUtilities.invokeLater(
@@ -288,7 +276,28 @@ public class GameGui extends JFrame {
 				});
 		
 	}
+	// Connection dialog message for start setup
+	private void setupConnection() {
+		
+        JPanel p = new JPanel(new BorderLayout(5,5));
+        
+        // Labels for input text boxes
+        JPanel labels = new JPanel(new GridLayout(0,1,2,2));
+        labels.add(new JLabel("IP-Address "));
+        labels.add(new JLabel("Username "));
+        p.add(labels, BorderLayout.WEST);
+        
+        // Input text boxes
+        JPanel controls = new JPanel(new GridLayout(0,1,2,2));
+        ipAddress = new JTextField();
+        controls.add(ipAddress);
+        username = new JTextField();
+        controls.add(username);
+        p.add(controls, BorderLayout.CENTER);
 
+        JOptionPane.showMessageDialog(
+            null, p, "Connecting...", JOptionPane.PLAIN_MESSAGE);     	
+    }
 
 	public boolean isNumeric(String str)
 	{

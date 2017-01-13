@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 
@@ -69,9 +70,19 @@ public class DiceBoard extends JPanel {
 	//drawDice(GameGuiNew.start);
 	public void DrawDices() {
 		if (isShowing()) {
+			
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		    int screenW = (int)(Math.round(screenSize.width*0.50));
+		    int screenH = (int)(Math.round(screenSize.height*0.60));
+		    int boardW = (int)(Math.round(screenW*0.6));
+		    int boardH = (int)(Math.round(screenH*0.81));
+		    
 			Graphics g = getGraphics();
-			g.drawImage(images[GameGui.getDice1()], 100, 200, null);
-			g.drawImage(images[GameGui.getDice2()], 250, 200, null);
+			g.drawImage(images[GameGui.getDice1()], 
+					(int)(Math.round(boardW*0.22)), (int)(Math.round(boardH*0.4)), null);
+			
+			g.drawImage(images[GameGui.getDice2()], 
+					(int)(Math.round(boardW*0.52)), (int)(Math.round(boardH*0.4)), null);
 		}
 	}
 	/*

@@ -19,7 +19,7 @@ public class PlayerInstance extends Thread {
 	gameClass game = new gameClass();
 	Server s;
 	PrintWriter pw;
-
+	boolean started = false;
 	public PlayerInstance(Socket clientSocket, String serverText, Server p) {
 		this.clientSocket = clientSocket;
 		this.serverText = serverText;
@@ -37,9 +37,12 @@ public class PlayerInstance extends Thread {
 					Thread.sleep(1000);
 				} catch (InterruptedException cvd) {
 				}
-				if (s.gameFull) {
-					pw.println("SGame");
-					pw.flush();
+				if (!started) {
+					if (s.gameFull) {
+						pw.println("SGame");
+						pw.flush();
+						started = true;
+					}
 				}
 				while (yourTurn) {
 					System.out.println("It's your turn" + clientSocket.getPort());
@@ -68,9 +71,8 @@ public class PlayerInstance extends Thread {
 							s.turnDoneServer();
 						} else if (clientRequest.contains("false")) {
 							s.prevRoll();
-							pw.println(prevTotal);
-							pw.flush();
 							updateTurn(false);
+							s.roundDone();
 							s.turnDoneServer();
 						}
 					} catch (IOException e) {
