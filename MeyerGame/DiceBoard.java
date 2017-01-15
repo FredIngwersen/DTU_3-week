@@ -78,10 +78,10 @@ public class DiceBoard extends JPanel {
 		    int boardH = (int)(Math.round(screenH*0.81));
 		    
 			Graphics g = getGraphics();
-			g.drawImage(images[GameGui.getDice1()], 
+			g.drawImage(images[GameGuiTesting.getDice1()],
 					(int)(Math.round(boardW*0.22)), (int)(Math.round(boardH*0.4)), null);
 			
-			g.drawImage(images[GameGui.getDice2()], 
+			g.drawImage(images[GameGuiTesting.getDice2()],
 					(int)(Math.round(boardW*0.52)), (int)(Math.round(boardH*0.4)), null);
 		}
 	}
