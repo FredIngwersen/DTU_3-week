@@ -72,7 +72,7 @@ public class GameGuiTesting extends JFrame {
 		int screenH = (int)(Math.round(screenSize.height*0.60));
 
 		setTitle("A Game of Meyer!");
-		setSize(900, 600);
+		setSize(screenW, screenH);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -191,4 +191,10 @@ public class GameGuiTesting extends JFrame {
 				null, p, "Connecting...", JOptionPane.PLAIN_MESSAGE);
 	}
 
+	public void endGamePopup(int prevRoll) {
+		setDice1(0);
+		setDice2(0);
+		JOptionPane.showMessageDialog(null, "The revealed roll was" + prevRoll);
+
+	}
 }

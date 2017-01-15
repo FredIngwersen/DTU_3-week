@@ -36,7 +36,7 @@ public class DiceBoard extends JPanel {
 					images[4] = ImageIO.read(new File("src/MeyerGame/img/dice5.png"));
 					images[5] = ImageIO.read(new File("src/MeyerGame/img/dice6.png"));
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+
 					e1.printStackTrace();
 				}
 				

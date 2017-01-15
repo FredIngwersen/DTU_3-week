@@ -32,6 +32,7 @@ public class ClientLogicThread extends Thread {
 	private static boolean repaint = false;
 	static boolean visible = true;
 	private static ClientOutputStream chatStream;
+
 	int counter = 0;
 	int prevRoll;
 
@@ -57,8 +58,12 @@ public class ClientLogicThread extends Thread {
 				}
 			}
 			while (1 == 1) {
+				try {
+					Thread.sleep(0);
+				} catch (InterruptedException e) {
+				}
 				while (!waiting) {
-					visible = true;
+					visible = false;
 					p.updateButtons(visible);
 					System.out.println("ReadingFromServer");
 					String starter = bir.readLine();
@@ -86,18 +91,14 @@ public class ClientLogicThread extends Thread {
 						waiting = false;
 					} else if (starter.contains("endGame")) {
 						prevRoll = Integer.parseInt(bir.readLine());
+						System.out.println(prevRoll);
+						p.endGamePopup(prevRoll);
 						System.out.println("Game ended");
-					}
-				}
-				try {
-					Thread.sleep(7000);
-				} catch (InterruptedException e) {
-					counter = counter + 1;
-				}
-				if (counter == 8
-						) {
-					counter = 0;
-					waiting = false;
+						waiting = false;
+					}/*
+					else if (isNumeric(starter)) {
+						p.endGamePopup(Integer.parseInt(starter));
+					}*/
 				}
 			}
 		} catch (IOException e) {
@@ -126,12 +127,10 @@ public class ClientLogicThread extends Thread {
 			System.out.println("pressed false");
 			bos.write("false\n".getBytes());
 			bos.flush();
-			String prevRoll = bir.readLine();
-			System.out.println(prevRoll);
 			setWaiting(false);
 			visible = false;
 			p.updateButtons(visible);
-			//TODO show output of prevRoll
+
 
 		} catch (IOException e1) {
 			System.out.println("Error Button");
@@ -153,7 +152,7 @@ public class ClientLogicThread extends Thread {
 			p.setDice1(dice1);
 			p.setDice2(dice2);
 
-			//TODO display dice
+
 			setWaiting(false);
 			visible = false;
 			p.updateButtons(visible);
@@ -177,7 +176,7 @@ public class ClientLogicThread extends Thread {
 
 	public void userText() {
 		String msgText = p.getUserText();
-		chatPw.println(p.getUsernameText() + p.getUserText());
+		chatPw.println(p.getUsernameText()+ " " + p.getUserText());
 		chatPw.flush();
 		p.setUserText("");
 	}
@@ -206,5 +205,9 @@ public class ClientLogicThread extends Thread {
 				});
 
 	}
+	public int getPrevRoll() {
+		return prevRoll;
+	}
+
 
 }

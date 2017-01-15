@@ -35,7 +35,7 @@ public class Server implements Runnable{
 			chatSocket = new ServerSocket(8081);
 			System.out.println("connected to chat");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 
@@ -114,7 +114,7 @@ public class Server implements Runnable{
 			stop();
 			System.out.println("Server Stopped.") ;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
@@ -166,5 +166,8 @@ public class Server implements Runnable{
 	public void turnDoneServer() {
 		doneWaiting = true;
 	}
-	public void roundDone() { first = true;}
+	public void roundDone() {
+		first = true;
+
+	}
 }
