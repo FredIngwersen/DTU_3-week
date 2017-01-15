@@ -79,7 +79,7 @@ public class ClientLogicThread extends Thread {
 
 					} else if (starter.contains("Start")) {
 						visible = false;
-						p.updateButtons(visible);
+						p.updateButtons(visible);	
 						start = true;
 						System.out.println("Client here");
 						bos.write("RR\n".getBytes());
