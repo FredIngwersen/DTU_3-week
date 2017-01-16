@@ -1,17 +1,15 @@
 package MeyerGame;
 
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server implements Runnable{
-
+public class Server implements Runnable {
 	int maxPlayers = 2;
 	int x = 0;
-	private int          serverPort;
+	private int serverPort;
 	private ServerSocket serverSocket = null;
-	private Thread       runningThread= null;
+	private Thread runningThread= null;
 	private boolean isStopped = false;
 	boolean gameFull = false;
 	boolean first;
@@ -22,11 +20,8 @@ public class Server implements Runnable{
 	private ServerSocket chatServer;
 	private ChatThread[] playerChat = new ChatThread[maxPlayers];
 	private ServerSocket chatSocket;
-	
 
-
-	public Server(int port)
-	{
+	public Server(int port) {
 		this.serverPort = port;
 	}
 
@@ -35,17 +30,15 @@ public class Server implements Runnable{
 			chatSocket = new ServerSocket(8081);
 			System.out.println("connected to chat");
 		} catch (IOException e1) {
-
 			e1.printStackTrace();
 		}
-
 		System.out.println("Server is running");
-		synchronized(this){
+		synchronized(this) {
 			this.runningThread = Thread.currentThread();
 		}
 		openServerSocket();
 		try {
-			while(!gameFull){
+			while(!gameFull) {
 				System.out.println("Waiting for players to fill up a game table");
 				Socket clientSocket = null;
 				Socket chatSocket = null;
@@ -54,7 +47,7 @@ public class Server implements Runnable{
 					chatSocket = this.chatSocket.accept();
 				} catch (IOException e) {
 					if(isStopped()) {
-						System.out.println("Server Stopped.") ;
+						System.out.println("Server Stopped.");
 						return;
 					}
 					throw new RuntimeException("Error accepting client connection", e);
@@ -63,39 +56,39 @@ public class Server implements Runnable{
 				threadArray[x] = new PlayerInstance(clientSocket, "Multithreaded Server", this);
 				threadArray[x].start();
 				inputStream[x] = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
 				System.out.println("Thread [" + x + "] started");
 				x = x+1;
-				if (x == maxPlayers){
+				if (x == maxPlayers) {
 					gameFull = true;
 				}
 			}
 			x = 0;
 			first = true;
-			while(isStopped() == false)
-			{
+			
+			while(isStopped() == false) {
 				for (int i = x; i < maxPlayers; i ++ ) {
-
 					threadArray[i].updateFirst(first);
 					threadArray[i].updateTurn(true);
 					first = false;
-					while (!doneWaiting){
-						try{Thread.sleep(0);}
-						catch (InterruptedException exc)
-						{
-
+					
+					while (!doneWaiting) {
+						try {
+							Thread.sleep(0);
+						} catch (InterruptedException exc) {
+							System.out.println("SERVER ERROR!");
 						}
 					}
+					
 					if (first) {
 						break;
 					}
 					System.out.println("turnDone");
-
 					x = x + 1;
-					if (x == maxPlayers)
-					{
+					
+					if (x == maxPlayers) {
 						x = 0;
 					}
+					
 					for (int c = 0; c < maxPlayers; c++ ) {
 						if (c == x) {
 							threadArray[c].updateTurn(true);
@@ -105,23 +98,20 @@ public class Server implements Runnable{
 							System.out.println("ended all other turns");
 						}
 					}
-
 					threadArray[i].updateFirst(first);
 					doneWaiting = false;
-
 				}
 			}
 			stop();
 			System.out.println("Server Stopped.") ;
 		} catch (IOException e) {
-
 			e.printStackTrace();
 		}
 	}
 	
 	public void sendToAll(String str) throws IOException {
-		for(int i = 0; i < playerChat.length; i++){
-			if(playerChat[i] != null){
+		for(int i = 0; i < playerChat.length; i++) {
+			if(playerChat[i] != null) {
 				playerChat[i].sendMessage(str);
 			}
 		}
@@ -142,12 +132,12 @@ public class Server implements Runnable{
 		}
 		first = true;
 	}
+	
 	private synchronized boolean isStopped() {
 		return this.isStopped;
 	}
 
-
-	public synchronized void stop(){
+	public synchronized void stop() {
 		this.isStopped = true;
 		try {
 			this.serverSocket.close();
@@ -163,11 +153,12 @@ public class Server implements Runnable{
 			throw new RuntimeException("Cannot open port" + serverPort, e);
 		}
 	}
+	
 	public void turnDoneServer() {
 		doneWaiting = true;
 	}
+	
 	public void roundDone() {
 		first = true;
-
 	}
 }

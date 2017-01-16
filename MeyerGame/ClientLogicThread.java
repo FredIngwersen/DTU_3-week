@@ -1,15 +1,11 @@
-
 package MeyerGame;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 
-/**
- * Created by William Ben Embarek on 13/01/2017.
- */
 public class ClientLogicThread extends Thread {
-	private GameGuiTesting p;
+	private GameGUI p;
 	private static String chatMessage;
 	static boolean gameStart = false;
 	static boolean waiting = false;
@@ -19,7 +15,6 @@ public class ClientLogicThread extends Thread {
 	static OutputStream chatOutput;
 	static BufferedReader chatBir;
 	static PrintWriter chatPw;
-
 
 	private static Socket connectSocket;
 	static InputStream input;
@@ -57,11 +52,14 @@ public class ClientLogicThread extends Thread {
 					gameStart = true;
 				}
 			}
+
 			while (1 == 1) {
 				try {
 					Thread.sleep(0);
 				} catch (InterruptedException e) {
+					System.out.println("ClientLogicThread ERROR!");
 				}
+
 				while (!waiting) {
 					visible = false;
 					p.updateButtons(visible);
@@ -69,9 +67,11 @@ public class ClientLogicThread extends Thread {
 					String starter = bir.readLine();
 					System.out.println("read from server");
 					System.out.println(starter);
+
 					if (starter.contains("SGame")) {
 						starter = bir.readLine();
 					}
+
 					if (starter.contains("norm") || start) {
 						waiting = true;
 						visible = true;
@@ -83,42 +83,42 @@ public class ClientLogicThread extends Thread {
 						start = true;
 						System.out.println("Client here");
 						bos.write("RR\n".getBytes());
-						bos.flush();
 						dice1 = Integer.parseInt(bir.readLine());
 						p.setDice1(dice1);
 						dice2 = Integer.parseInt(bir.readLine());
 						p.setDice2(dice2);
 						waiting = false;
+
 					} else if (starter.contains("endGame")) {
 						prevRoll = Integer.parseInt(bir.readLine());
 						System.out.println(prevRoll);
 						p.endGamePopup(prevRoll);
 						System.out.println("Game ended");
 						waiting = false;
-					}/*
+					}
 					else if (isNumeric(starter)) {
-						p.endGamePopup(Integer.parseInt(starter));
-					}*/
+						prevRoll = Integer.parseInt(starter);
+						p.endGamePopup(prevRoll);
+						System.out.println("Game ended");
+						waiting = false;
+					}
 				}
 			}
 		} catch (IOException e) {
 			System.out.println("we had a little error server connection wise");
 		}
-
 	}
 
-	public ClientLogicThread(GameGuiTesting p) {
+	public ClientLogicThread(GameGUI p) {
 		this.p = p;
 		try {
 			connectSocket = new Socket(p.ipAddress.getText(), 8080);
 			System.out.println("Client connected to port 8080");
 			chatSocket = new Socket(p.ipAddress.getText(), 8081);
 			System.out.println("Client connected to chat /port 8081");
-
 		} catch (IOException e) {
 			System.out.println("Client couldn't connect to server");
 		}
-
 	}
 
 
@@ -130,12 +130,9 @@ public class ClientLogicThread extends Thread {
 			setWaiting(false);
 			visible = false;
 			p.updateButtons(visible);
-
-
 		} catch (IOException e1) {
 			System.out.println("Error Button");
 		}
-
 	}
 
 	public void pressTrue() {
@@ -151,12 +148,9 @@ public class ClientLogicThread extends Thread {
 			dice2 = Integer.parseInt(dice2String);
 			p.setDice1(dice1);
 			p.setDice2(dice2);
-
-
 			setWaiting(false);
 			visible = false;
 			p.updateButtons(visible);
-
 		} catch (IOException e1) {
 			System.out.println("Error Button");
 		}
@@ -176,7 +170,7 @@ public class ClientLogicThread extends Thread {
 
 	public void userText() {
 		String msgText = p.getUserText();
-		chatPw.println(p.getUsernameText()+ " " + p.getUserText());
+		chatPw.println(p.getUsernameText()+ ": " + p.getUserText());
 		chatPw.flush();
 		p.setUserText("");
 	}
@@ -195,7 +189,6 @@ public class ClientLogicThread extends Thread {
 				});
 	}
 
-
 	public void updateChat(String str) {
 		SwingUtilities.invokeLater(
 				new Runnable() {
@@ -203,11 +196,9 @@ public class ClientLogicThread extends Thread {
 						p.chatWindow.append("\n" + str);
 					}
 				});
-
 	}
+
 	public int getPrevRoll() {
 		return prevRoll;
 	}
-
-
 }
