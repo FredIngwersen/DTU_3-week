@@ -1,9 +1,9 @@
 package MeyerGame;
 
 public class DiceThread extends Thread {
-	public GameGuiTesting parent;
+	public GameGUI parent;
 
-	public DiceThread(GameGuiTesting p) {
+	public DiceThread(GameGUI p) {
 		parent = p;
 	}
 
@@ -15,7 +15,6 @@ public class DiceThread extends Thread {
 			} catch (InterruptedException e) {
 				System.out.println("Error");
 			}
-			//System.out.println("Drawing dices...");
 			parent.diceBoard.DrawDices();
 		}
 	}

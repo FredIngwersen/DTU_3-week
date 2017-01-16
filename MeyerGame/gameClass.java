@@ -2,22 +2,23 @@ package MeyerGame;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Created by William Ben Embarek on 05/01/2017.
- */
-public class gameClass {
+public class GameClass {
 	int totalp1;
 	private int dice1;
 	private int dice2;
-	public int rollDice() //Rolls 2 dice and returns an int of the 2 dice (roll 3 and 6, returns 63)
-	{
+
+	// Rolls the two dices and returns the sum of the two dices as an integer. Roll 3 and 6 evaluates as 36
+	public int rollDice() {
 		String total;
 		dice1 = ThreadLocalRandom.current().nextInt(1, 7);
 		dice2 = ThreadLocalRandom.current().nextInt(1, 7);
+
 		if (dice1 > dice2) {
 			total = Integer.toString(dice1) + Integer.toString(dice2);
+
 		} else if (dice2 > dice1) {
 			total = Integer.toString(dice2) + Integer.toString(dice1);
+
 		} else {
 			total = Integer.toString(dice1) + Integer.toString(dice2);
 		}
@@ -25,21 +26,27 @@ public class gameClass {
 		return totalp1;
 	}
 
-	public boolean beatRoll(int totalp1, int totalp2) { //Returns a true if p1 beat p2's roll, else returns false
+	// Returns true if player 1 beats player 2's roll, otherwise it returns false 
+	public boolean beatRoll(int totalp1, int totalp2) {
 		boolean p1Doubles = false;
 		boolean p2Doubles = false;
+
 		if (Math.floor(totalp1 / 10) == totalp1 % Math.floor(totalp1 / 10) * 10) {
 			p1Doubles = true;
 		}
+
 		if (Math.floor(totalp2 / 10) == totalp2 % Math.floor(totalp2 / 10) * 10) {
 			p2Doubles = true;
 		}
+
 		if (totalp1 == 21 && totalp2 != 21) {
 			return true;
 		}
+
 		else if (totalp1 == 31 && (totalp2 != 21 && totalp2 != 31)) {
 			return true;
 		}
+
 		else if (p1Doubles && p2Doubles) {
 			if (Math.floor(totalp1 / 10) > Math.floor(totalp2 / 10)) {
 				return true;
@@ -47,19 +54,23 @@ public class gameClass {
 				return false;
 			}
 		}
-		else if (p1Doubles && !(p2Doubles || totalp2 == 21 || totalp2 == 31)){
+
+		else if (p1Doubles && !(p2Doubles || totalp2 == 21 || totalp2 == 31)) {
 			return true;
 		}
+
 		else if (totalp1 > totalp2 && !((p2Doubles || totalp2 == 21 || totalp2 == 31))) {
 			return true;
 		}
+
 		else {
 			return false;
 		}
 	}
-	public void notTrust(int totalp2){
+
+	public void notTrust(int totalp2) {
 		totalp1 = rollDice();
-		if(beatRoll(totalp1, totalp2)){
+		if(beatRoll(totalp1, totalp2)) {
 			//TODO CODE THAT HANDLES PLAYER WINNING.
 		} else {
 			//TODO CODE THAT HANDLES PLAYER LOSING.
